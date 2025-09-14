@@ -1,0 +1,5 @@
+# FastMCP Server Dependencies
+# These are the minimal packages needed to run our MCP server
+
+# Core MCP server library - provides all the MCP protocol functionality
+mcp>=1.0.0
