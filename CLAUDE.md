@@ -180,8 +180,8 @@ curl http://127.0.0.1:8001/
 
 ### Development Setup
 ```bash
-# Clone repository (if from GitHub)
-git clone <repository-url>
+# Clone repository from GitHub
+git clone https://github.com/cth1975/Ansys_Workbench_Scripting_MCP.git
 cd Ansys_Workbench_Scripting_MCP
 
 # Set up virtual environment
@@ -244,7 +244,7 @@ This repository includes everything needed for seamless development across multi
 - **Working code**: Only production-ready files included
 
 ### 🔧 Setting Up on New Machine:
-1. **Clone repository**: `git clone <repo-url>`
+1. **Clone repository**: `git clone https://github.com/cth1975/Ansys_Workbench_Scripting_MCP.git`
 2. **Set up virtual environment**: `python -m venv .venv && source .venv/bin/activate`
 3. **Install dependencies**: `pip install -r requirements.txt`
 4. **Run solution**: `python launcher_http.py`
