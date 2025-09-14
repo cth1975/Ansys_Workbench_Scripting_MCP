@@ -1,21 +1,115 @@
-# MCP Server Development - Project Documentation
+# Ansys Workbench Scripting MCP Server
+
+## Real Project Purpose
+
+This MCP server is designed to **augment AI assistants with comprehensive Ansys Workbench scripting knowledge and resources**. The primary focus is on **CPython scripting** for Ansys Workbench automation, addressing the knowledge gap that most AI models have regarding Ansys-specific programming.
+
+### The Problem
+- Most AI models lack detailed knowledge about Ansys Workbench Python scripting
+- CPython support was recently introduced to Ansys Workbench (alongside existing IronPython)
+- Users need assistance writing Python automation scripts for Ansys Workbench
+- Limited examples and documentation make it challenging for developers
+
+### The Solution
+This MCP server provides AI assistants with:
+- Comprehensive Ansys Workbench Python API documentation
+- Code templates and patterns for common tasks
+- Best practices for CPython vs IronPython differences
+- Troubleshooting guides and examples
+- Real-world scripting scenarios and solutions
 
 ## Project Overview
 
-This project implements a Model Context Protocol (MCP) server for TechCorp Solutions, demonstrating resources and prompts functionality. The MCP allows AI assistants to access external resources and tools in a standardized way.
+This project implements a Model Context Protocol (MCP) server that enables AI assistants to access Ansys Workbench scripting resources in a standardized way. Built on a robust HTTP/SSE transport foundation, it will serve as a knowledge bridge for Ansys automation development.
 
 ## ✅ SOLUTION IMPLEMENTED
 
 ### Issue Resolution
 The "Method not found" error has been **RESOLVED** by switching from stdio transport to HTTP/SSE transport. The root cause was identified as a JSON-RPC parameter validation bug in the MCP SDK's stdio transport layer.
 
-## Current Status: WORKING ✅
+## Current Status: INFRASTRUCTURE COMPLETE ✅
 
-The MCP server is now fully functional with:
-- **3 Resources**: Company Info, Product Catalog, API Documentation
-- **3 Prompts**: Data Analysis, Email Templates, Code Review
-- **Auto-configuring launcher** with MCP Inspector integration
+The MCP server infrastructure is fully functional with:
+- **HTTP/SSE Transport**: Reliable connection to AI assistants via MCP Inspector
+- **Auto-configuring launcher** with seamless MCP Inspector integration
 - **No manual setup required** - everything pre-configured
+- **Ready for Ansys content**: Infrastructure prepared for Ansys-specific resources
+
+### Current Phase: Foundation Complete
+- ✅ **MCP Infrastructure**: HTTP/SSE transport working perfectly
+- ✅ **Connection Issues Resolved**: Fixed "Method not found" errors
+- ✅ **Auto-Configuration**: Seamless launcher and browser integration
+- ⏳ **Next Phase**: Replace placeholder resources with Ansys Workbench content
+
+## Development Roadmap
+
+### Phase 1: MCP Infrastructure ✅ COMPLETE
+- ✅ Implement working HTTP/SSE transport MCP server
+- ✅ Resolve JSON-RPC validation issues with stdio transport
+- ✅ Create auto-configuring launcher with MCP Inspector integration
+- ✅ Establish GitHub repository with comprehensive documentation
+
+### Phase 2: Resource Gathering 🔄 CURRENT
+- 📋 Collect Ansys Workbench Python API documentation
+- 📋 Gather CPython-specific examples and patterns
+- 📋 Document differences between CPython and IronPython in Ansys context
+- 📋 Identify common scripting scenarios and use cases
+- 📋 Collect troubleshooting guides and best practices
+
+### Phase 3: Resource Implementation 🔮 NEXT
+- 🔮 Replace placeholder resources with Ansys Workbench content
+- 🔮 Implement Ansys-specific prompts for code generation
+- 🔮 Add code templates for common automation tasks
+- 🔮 Create comprehensive API reference resources
+
+### Phase 4: Enhancement & Optimization 🔮 FUTURE
+- 🔮 Add interactive code examples and testing
+- 🔮 Implement version-specific documentation (different Ansys releases)
+- 🔮 Add integration guides for common workflows
+- 🔮 Create tutorial sequences for learning paths
+
+## Ansys Resource Categories
+
+### Planned MCP Resources
+
+#### 1. **API Documentation Resources**
+- `ansys://api/workbench` - Core Workbench Python API reference
+- `ansys://api/mechanical` - Mechanical application scripting
+- `ansys://api/fluent` - Fluent automation interfaces
+- `ansys://api/cpython-differences` - CPython vs IronPython differences
+
+#### 2. **Code Template Resources**
+- `ansys://templates/project-setup` - Project creation and setup patterns
+- `ansys://templates/meshing` - Meshing automation templates
+- `ansys://templates/analysis` - Analysis setup and execution
+- `ansys://templates/post-processing` - Results extraction and reporting
+
+#### 3. **Best Practices Resources**
+- `ansys://practices/error-handling` - Robust error handling patterns
+- `ansys://practices/performance` - Performance optimization techniques
+- `ansys://practices/debugging` - Debugging Ansys Python scripts
+
+#### 4. **Integration Resources**
+- `ansys://integration/excel` - Excel integration patterns
+- `ansys://integration/external-tools` - Third-party tool connections
+- `ansys://integration/batch-processing` - Batch job automation
+
+### Planned MCP Prompts
+
+#### 1. **Code Generation Prompts**
+- `generate_ansys_script` - Generate Ansys automation scripts
+- `convert_ironpython_cpython` - Convert between Python implementations
+- `create_analysis_workflow` - Build complete analysis workflows
+
+#### 2. **Troubleshooting Prompts**
+- `debug_ansys_error` - Help diagnose Ansys scripting errors
+- `optimize_performance` - Suggest performance improvements
+- `review_script` - Code review with Ansys best practices
+
+#### 3. **Learning Prompts**
+- `explain_api_usage` - Explain specific API usage patterns
+- `tutorial_sequence` - Generate learning tutorials
+- `example_walkthrough` - Create detailed code examples
 
 ## Project Structure (Clean)
 
@@ -117,25 +211,29 @@ But stdio transport's JSON-RPC layer rejected `{"method": "prompts/list", "param
 
 HTTP/SSE transport bypasses this validation bug entirely.
 
-## Available Resources
+## Current Resources (Placeholder Content)
 
-1. **Company Info** (`text://company_info`)
-   - TechCorp Solutions basic information
-   - Founded 2020, 150 employees, San Francisco HQ
+⚠️ **Note**: The current resources are placeholder content from the MCP infrastructure development phase. These will be replaced with Ansys Workbench-specific content in Phase 3.
 
-2. **Product Catalog** (`text://product_catalog`)
-   - 4 products: CloudSync Pro, DataViz Analytics, SecureVault, WorkFlow Manager
-   - Pricing: $79-149/month
+### Current Placeholder Resources:
+1. **Company Info** (`text://company_info`) - *TO BE REPLACED*
+   - Currently: TechCorp Solutions information
+   - Future: Ansys Workbench overview and capabilities
 
-3. **API Documentation** (`text://api_docs`)
-   - REST API endpoints and authentication
-   - Rate limits and usage guidelines
+2. **Product Catalog** (`text://product_catalog`) - *TO BE REPLACED*
+   - Currently: Generic product information
+   - Future: Ansys application suite and scripting capabilities
 
-## Available Prompts
+3. **API Documentation** (`text://api_docs`) - *TO BE REPLACED*
+   - Currently: Generic REST API documentation
+   - Future: Ansys Workbench Python API reference
 
-1. **analyze_data** - Business data analysis with customizable parameters
-2. **write_email** - Professional email templates for various recipients
-3. **code_review** - Code review checklists for different languages/projects
+### Current Placeholder Prompts:
+1. **analyze_data** - *TO BE REPLACED* with `generate_ansys_script`
+2. **write_email** - *TO BE REPLACED* with `convert_ironpython_cpython`
+3. **code_review** - *TO BE EVOLVED* to `review_ansys_script`
+
+These placeholders demonstrate the MCP infrastructure works correctly and will serve as templates for implementing the Ansys-specific content.
 
 ## Connection Settings
 
@@ -258,10 +356,23 @@ This repository includes everything needed for seamless development across multi
 
 ## Project Evolution
 
-1. **Phase 1**: stdio transport + multiple server implementations → "Method not found" errors
-2. **Phase 2**: Extensive debugging, discovered JSON-RPC validation bug in MCP SDK
-3. **Phase 3**: Implemented HTTP/SSE transport solution → ✅ WORKING
-4. **Phase 4**: Code cleanup, removed obsolete files, auto-configuration → ✅ COMPLETE
+### Infrastructure Development (Complete)
+1. **Phase 1A**: stdio transport + multiple server implementations → "Method not found" errors
+2. **Phase 1B**: Extensive debugging, discovered JSON-RPC validation bug in MCP SDK
+3. **Phase 1C**: Implemented HTTP/SSE transport solution → ✅ WORKING
+4. **Phase 1D**: Code cleanup, auto-configuration, GitHub deployment → ✅ COMPLETE
+
+### Content Development (Current & Future)
+5. **Phase 2A**: Branch creation and project redefinition → ✅ COMPLETE
+6. **Phase 2B**: Resource gathering (Ansys documentation, examples) → 🔄 CURRENT
+7. **Phase 3A**: Replace placeholder content with Ansys resources → 🔮 NEXT
+8. **Phase 3B**: Implement Ansys-specific prompts and templates → 🔮 FUTURE
+
+### Purpose Transition
+- **Original Goal**: Demonstrate MCP server functionality with generic content
+- **Real Purpose**: Provide comprehensive Ansys Workbench scripting assistance
+- **Key Insight**: Strong technical foundation enables focus on Ansys-specific content
+- **Current Status**: Infrastructure complete, ready for Ansys content development
 
 ## Resources & References
 
@@ -273,5 +384,19 @@ This repository includes everything needed for seamless development across multi
 ---
 
 *Last Updated: 2025-09-14*
-*Status: ✅ COMPLETE - HTTP/SSE solution working perfectly*
-*Next Steps: Ready for production use*
+*Branch: ansys-resources*
+*Status: 🔄 INFRASTRUCTURE COMPLETE - Ready for Ansys content development*
+*Current Phase: Resource Gathering (Phase 2B)*
+*Next Steps: Collect Ansys Workbench documentation and examples*
+
+### Quick Start for Contributors
+```bash
+git clone https://github.com/cth1975/Ansys_Workbench_Scripting_MCP.git
+cd Ansys_Workbench_Scripting_MCP
+git checkout ansys-resources  # Switch to development branch
+python -m venv .venv && source .venv/bin/activate
+pip install -r requirements.txt
+python launcher_http.py  # Test infrastructure
+```
+
+**Ready to begin Ansys Workbench content development!**
