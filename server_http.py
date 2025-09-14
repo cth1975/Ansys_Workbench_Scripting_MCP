@@ -5,157 +5,195 @@ This version uses Server-Sent Events over HTTP instead of stdio
 """
 
 from mcp.server.fastmcp import FastMCP
+from ansys_resource_loader import get_resource_content, resource_loader
 
 # Create MCP server instance with HTTP settings
 mcp = FastMCP(
-    "TechCorp Solutions HTTP Server",
+    "Ansys Workbench Scripting Server",
     host="127.0.0.1",
     port=8001,
     debug=True
 )
 
-# Resources using individual decorators
-@mcp.resource("text://company_info")
-def get_company_info() -> str:
-    """Get basic information about TechCorp Solutions."""
-    return """
-    Company: TechCorp Solutions
-    Founded: 2020
-    Employees: 150
-    Headquarters: San Francisco, CA
-    Mission: Building innovative software solutions for modern businesses.
-    """
+# Ansys Workbench Scripting Resources
+@mcp.resource("ansys://workbench/overview")
+def get_workbench_overview() -> str:
+    """Get comprehensive overview of Ansys Workbench scripting capabilities."""
+    return get_resource_content("workbench_overview")
 
-@mcp.resource("text://product_catalog")
-def get_product_catalog() -> str:
-    """Get list of available products and pricing."""
-    return """
-    Products:
-    1. CloudSync Pro - Enterprise file synchronization ($99/month)
-    2. DataViz Analytics - Business intelligence dashboard ($149/month)
-    3. SecureVault - Encrypted data storage ($79/month)
-    4. WorkFlow Manager - Project management suite ($119/month)
-    """
+@mcp.resource("ansys://pymechanical/architecture")
+def get_pymechanical_architecture() -> str:
+    """Get detailed PyMechanical architecture and implementation details."""
+    return get_resource_content("pymechanical_architecture")
 
-@mcp.resource("text://api_docs")
-def get_api_docs() -> str:
-    """Get REST API documentation and usage guidelines."""
-    return """
-    API Documentation:
+@mcp.resource("ansys://python/cpython-vs-ironpython")
+def get_python_comparison() -> str:
+    """Get comprehensive guide comparing CPython vs IronPython in Ansys context."""
+    return get_resource_content("cpython_vs_ironpython")
 
-    Authentication: Bearer token required in Authorization header
-    Base URL: https://api.techcorp.com/v1/
+@mcp.resource("ansys://reference/quick-guide")
+def get_quick_reference() -> str:
+    """Get quick reference guide for common Ansys Workbench scripting tasks."""
+    return get_resource_content("quick_reference")
 
-    Endpoints:
-    - GET /users - List all users
-    - POST /users - Create new user
-    - GET /projects - List projects
-    - POST /projects - Create project
-
-    Rate Limits: 1000 requests per hour per API key
-    """
-
-# Prompts using individual decorators
+# Ansys-Specific Prompts
 @mcp.prompt()
-def analyze_data(data_type: str, time_period: str = "monthly", focus_area: str = "overall trends") -> str:
+def generate_ansys_script(task_description: str, ansys_version: str = "2025 R1", python_type: str = "CPython") -> str:
     """
-    Analyze business data and provide insights.
+    Generate Ansys Workbench automation script for a specific task.
 
     Args:
-        data_type: Type of data to analyze (sales, users, performance, etc.)
-        time_period: Time period for analysis (daily, weekly, monthly, yearly)
-        focus_area: Specific area to focus the analysis on
+        task_description: Description of the automation task to accomplish
+        ansys_version: Target Ansys version (2024 R1, 2024 R2, 2025 R1, etc.)
+        python_type: Python implementation (CPython, IronPython)
     """
-    return f"""
-Please analyze the following {data_type} with a focus on {focus_area}.
+    framework = "PyMechanical (recommended)" if python_type.lower() == "cpython" else "IronPython scripting"
 
-Analysis Parameters:
-- Data Type: {data_type}
-- Time Period: {time_period}
-- Focus Area: {focus_area}
+    return f"""
+Generate an Ansys Workbench automation script for the following task:
+
+**Task**: {task_description}
+**Target Version**: {ansys_version}
+**Python Framework**: {framework}
 
 Please provide:
-1. Key trends and patterns
-2. Notable insights or anomalies
-3. Actionable recommendations
-4. Areas that need further investigation
 
-Format your response with clear sections and bullet points for easy reading.
+1. **Complete Python Script**
+   - Proper imports and initialization
+   - Error handling and validation
+   - Clear comments explaining each step
+   - Best practices for {python_type}
+
+2. **Setup Requirements**
+   - Required Ansys modules/licenses
+   - Python package dependencies
+   - Environment setup instructions
+
+3. **Usage Instructions**
+   - How to run the script
+   - Expected inputs and outputs
+   - Troubleshooting common issues
+
+4. **Code Structure**
+   - Main automation logic
+   - Helper functions if needed
+   - Proper resource cleanup
+
+Focus on modern Ansys automation best practices and include comprehensive error handling.
+Ensure the script follows Ansys {ansys_version} API patterns and conventions.
 """
 
 @mcp.prompt()
-def write_email(recipient_type: str, purpose: str, tone: str = "professional") -> str:
+def debug_ansys_error(error_message: str, context: str = "", ansys_version: str = "2025 R1") -> str:
     """
-    Generate a professional email template.
+    Help diagnose and resolve Ansys scripting errors.
 
     Args:
-        recipient_type: Type of recipient (customer, partner, employee, etc.)
-        purpose: Purpose of the email (announcement, follow-up, request, etc.)
-        tone: Desired tone (formal, friendly, urgent, etc.)
+        error_message: The error message or exception encountered
+        context: Additional context about what was being attempted
+        ansys_version: Ansys version being used
     """
     return f"""
-Write a {tone} email for a {recipient_type} with the purpose of {purpose}.
+Help diagnose and resolve this Ansys scripting error:
 
-Email Guidelines:
-- Recipient: {recipient_type}
-- Purpose: {purpose}
-- Tone: {tone}
+**Error Message**: {error_message}
+**Context**: {context}
+**Ansys Version**: {ansys_version}
 
-Please include:
-1. Appropriate subject line
-2. Professional greeting
-3. Clear and concise body content
-4. Appropriate closing
-5. Call to action if needed
+Please provide:
 
-Keep the email focused and respectful of the recipient's time.
+1. **Error Analysis**
+   - Likely root cause of the error
+   - Common scenarios that trigger this error
+   - Whether it's version-specific
+
+2. **Solution Steps**
+   - Step-by-step resolution approach
+   - Code fixes or workarounds
+   - Alternative approaches if needed
+
+3. **Prevention Strategies**
+   - Best practices to avoid this error
+   - Proper error handling patterns
+   - Validation checks to implement
+
+4. **Related Issues**
+   - Similar errors and their solutions
+   - Known limitations or bugs
+   - Version compatibility notes
+
+Include specific code examples and explain the technical reasoning behind the solution.
+Focus on both immediate fixes and long-term code improvement strategies.
 """
 
 @mcp.prompt()
-def code_review(language: str, project_type: str = "application") -> str:
+def convert_ironpython_to_cpython(ironpython_code: str, target_features: str = "basic conversion") -> str:
     """
-    Generate code review checklist and guidelines.
+    Convert IronPython Ansys scripts to CPython with PyMechanical.
 
     Args:
-        language: Programming language (python, javascript, java, etc.)
-        project_type: Type of project (web app, API, mobile, etc.)
+        ironpython_code: The IronPython code to convert
+        target_features: Specific features to enhance (basic conversion, error handling, modern patterns, etc.)
     """
     return f"""
-Create a code review checklist for a {language} {project_type}.
+Convert the following IronPython Ansys script to modern CPython using PyMechanical:
 
-Review Focus:
-- Language: {language}
-- Project Type: {project_type}
+**Original IronPython Code**:
+```python
+{ironpython_code}
+```
 
-Please provide a comprehensive checklist covering:
-1. Code quality and style
-2. Security considerations
-3. Performance optimization
-4. Best practices specific to {language}
-5. Documentation and comments
-6. Testing coverage
-7. Error handling
+**Target Features**: {target_features}
 
-Format as a checklist with clear categories and specific items to verify.
+Please provide:
+
+1. **Converted CPython Script**
+   - Modern PyMechanical syntax
+   - Proper initialization and setup
+   - Enhanced error handling
+   - Python 3+ best practices
+
+2. **Key Changes Explained**
+   - What changed and why
+   - New capabilities enabled
+   - Performance improvements
+
+3. **Migration Notes**
+   - Dependencies to install
+   - Environment setup requirements
+   - Testing recommendations
+
+4. **Enhanced Features** (if requested)
+   - Better error handling
+   - Logging integration
+   - Modern Python patterns
+   - Package ecosystem integration
+
+Focus on creating maintainable, modern Python code that takes advantage of
+the full CPython ecosystem while maintaining compatibility with Ansys automation requirements.
 """
 
 # Run the server with SSE transport
 if __name__ == "__main__":
-    print("🚀 Starting MCP Server with HTTP/SSE transport")
+    print("🚀 Starting Ansys Workbench Scripting MCP Server")
     print("=" * 60)
     print(f"Server URL: http://127.0.0.1:8001")
     print(f"SSE Endpoint: http://127.0.0.1:8001/sse")
     print("")
-    print("Server capabilities:")
-    print("  📄 3 Resources:")
-    print("    • text://company_info - Company Information")
-    print("    • text://product_catalog - Product Catalog")
-    print("    • text://api_docs - API Documentation")
+    print("🔧 Ansys Workbench Scripting Server Capabilities:")
+    print("  📄 4 Resources:")
+    print("    • ansys://workbench/overview - Workbench automation overview")
+    print("    • ansys://pymechanical/architecture - PyMechanical implementation details")
+    print("    • ansys://python/cpython-vs-ironpython - Python implementation comparison")
+    print("    • ansys://reference/quick-guide - Quick reference for common tasks")
     print("")
     print("  🎯 3 Prompts:")
-    print("    • analyze_data - Business data analysis")
-    print("    • write_email - Professional email templates")
-    print("    • code_review - Code review checklists")
+    print("    • generate_ansys_script - Generate automation scripts")
+    print("    • debug_ansys_error - Diagnose and resolve scripting errors")
+    print("    • convert_ironpython_to_cpython - Migrate legacy scripts")
+    print("")
+    print("🎯 Purpose: Augment AI assistants with Ansys Workbench scripting knowledge")
+    print("📚 Documentation: Based on Ansys 2025 R1 and PyMechanical")
     print("")
     print("Connect MCP Inspector to: http://127.0.0.1:8001/sse")
     print("Press Ctrl+C to stop the server")
