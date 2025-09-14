@@ -42,3 +42,13 @@ mcp_debug*.log
 
 # GitHub CLI temporary files
 .gh-token
+
+# Ansys Resources (large files)
+resources/docs/pdf/*.pdf
+resources/docs/html/*/
+
+# Keep extracted/processed content and metadata
+!resources/docs/extracted/
+!resources/metadata/
+!resources/templates/
+!resources/scripts/

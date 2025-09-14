@@ -1,0 +1,38 @@
+{
+  "source_directory": "scripting.mechanical.docs.pyansys.com",
+  "processed_date": "2025-09-14T15:52:48.460162",
+  "total_files": 5,
+  "processed_files": 5,
+  "content": [
+    {
+      "file": "version/stable/api/ansys/mechanical/stubs/v251/index.html",
+      "title": "Mechanical 2025 R1 API Reference \u2014 PyMechanical Stubs",
+      "content": "Mechanical 2025 R1 API Reference \u2014 PyMechanical Stubs\nSkip to main content\nBack to top\nCtrl+K\nAPI reference\nGitHub\nSupport\nAPI reference\nGitHub\nSupport\nSection Navigation\nMechanical 2024 R1\nMechanical 2025 R1\nAnsys\nMechanical 2024 R2\nPyAnsys\nAPI reference\nMechanical 2025 R1 API Reference\nMechanical 2025 R1 API Reference#\nSummary#\nModules\nAnsys\nAnsys module.\nDescription#\nAnsys Mechanical v251 module.\nOn this page\nSummary\nDescription\nEdit\non GitHub\nShow Source\n\u00a9 Copyright (c) 2025 ANSYS, Inc. All rights reserved.\nCreated using Sphinx 7.3.7.\nBuilt with the\nAnsys Sphinx Theme\n1.0.11. Last updated on",
+      "length": 602
+    },
+    {
+      "file": "version/stable/api/ansys/mechanical/stubs/v251/Ansys/index.html",
+      "title": "Ansys \u2014 PyMechanical Stubs",
+      "content": "Ansys \u2014 PyMechanical Stubs\nSkip to main content\nBack to top\nCtrl+K\nAPI reference\nGitHub\nSupport\nAPI reference\nGitHub\nSupport\nSection Navigation\nMechanical 2024 R1\nMechanical 2025 R1\nAnsys\nACT\nCore\nMechanical\nMechanical 2024 R2\nPyAnsys\nAPI reference\nMechanical 2025 R1 API Reference\nAnsys\nAnsys#\nSummary#\nModules\nACT\nACT module.\nCore\nCore module.\nMechanical\nMechanical module.\nDescription#\nAnsys module.\nOn this page\nSummary\nDescription\nEdit\non GitHub\nShow Source\n\u00a9 Copyright (c) 2025 ANSYS, Inc. All rights reserved.\nCreated using Sphinx 7.3.7.\nBuilt with the\nAnsys Sphinx Theme\n1.0.11. Last updated on",
+      "length": 602
+    },
+    {
+      "file": "version/stable/api/ansys/mechanical/stubs/v251/Ansys/Core/index.html",
+      "title": "Core \u2014 PyMechanical Stubs",
+      "content": "Core \u2014 PyMechanical Stubs\nSkip to main content\nBack to top\nCtrl+K\nAPI reference\nGitHub\nSupport\nAPI reference\nGitHub\nSupport\nSection Navigation\nMechanical 2024 R1\nMechanical 2025 R1\nAnsys\nACT\nCore\nUnits\nMechanical\nMechanical 2024 R2\nPyAnsys\nAPI reference\nMechanical 2025 R1 API Reference\nAnsys\nCore\nCore#\nSummary#\nModules\nUnits\nUnits module.\nDescription#\nCore module.\nOn this page\nSummary\nDescription\nEdit\non GitHub\nShow Source\n\u00a9 Copyright (c) 2025 ANSYS, Inc. All rights reserved.\nCreated using Sphinx 7.3.7.\nBuilt with the\nAnsys Sphinx Theme\n1.0.11. Last updated on",
+      "length": 566
+    },
+    {
+      "file": "version/stable/api/ansys/mechanical/stubs/v251/Ansys/ACT/index.html",
+      "title": "ACT \u2014 PyMechanical Stubs",
+      "content": "ACT \u2014 PyMechanical Stubs\nSkip to main content\nBack to top\nCtrl+K\nAPI reference\nGitHub\nSupport\nAPI reference\nGitHub\nSupport\nSection Navigation\nMechanical 2024 R1\nMechanical 2025 R1\nAnsys\nACT\nAutomation\nCommon\nInterfaces\nMechanical\nCore\nMechanical\nMechanical 2024 R2\nPyAnsys\nAPI reference\nMechanical 2025 R1 API Reference\nAnsys\nACT\nACT#\nSummary#\nModules\nAutomation\nAutomation module.\nCommon\nCommon module.\nInterfaces\nInterfaces module.\nMechanical\nMechanical module.\nDescription#\nACT module.\nOn this page\nSummary\nDescription\nEdit\non GitHub\nShow Source\n\u00a9 Copyright (c) 2025 ANSYS, Inc. All rights reserved.\nCreated using Sphinx 7.3.7.\nBuilt with the\nAnsys Sphinx Theme\n1.0.11. Last updated on",
+      "length": 688
+    },
+    {
+      "file": "version/stable/api/ansys/mechanical/stubs/v251/Ansys/Mechanical/index.html",
+      "title": "Mechanical \u2014 PyMechanical Stubs",
+      "content": "Mechanical \u2014 PyMechanical Stubs\nSkip to main content\nBack to top\nCtrl+K\nAPI reference\nGitHub\nSupport\nAPI reference\nGitHub\nSupport\nSection Navigation\nMechanical 2024 R1\nMechanical 2025 R1\nAnsys\nACT\nCore\nMechanical\nApplication\nDataModel\nExternalData\nGraphics\nInterfaces\nMaterials\nMath\nSelection\nTable\nUI\nMechanical 2024 R2\nPyAnsys\nAPI reference\nMechanical 2025 R1 API Reference\nAnsys\nMechanical\nMechanical#\nSummary#\nModules\nApplication\nApplication module.\nDataModel\nDataModel module.\nExternalData\nExternalData module.\nGraphics\nGraphics module.\nInterfaces\nInterfaces module.\nMaterials\nMaterials module.\nMath\nMath module.\nSelection\nSelection module.\nTable\nTable module.\nUI\nUI module.\nDescription#\nMechanical module.\nOn this page\nSummary\nDescription\nEdit\non GitHub\nShow Source\n\u00a9 Copyright (c) 2025 ANSYS, Inc. All rights reserved.\nCreated using Sphinx 7.3.7.\nBuilt with the\nAnsys Sphinx Theme\n1.0.11. Last updated on",
+      "length": 911
+    }
+  ]
+}

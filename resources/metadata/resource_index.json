@@ -1,0 +1,48 @@
+{
+  "created": "2025-09-14T15:51:27.000307",
+  "pdf_resources": [
+    {
+      "filename": "dpf_post_cheat_sheet.pdf",
+      "size_bytes": 2191787,
+      "size_mb": 2.09,
+      "modified": "2024-07-11T13:49:59"
+    },
+    {
+      "filename": "scripting_mechanical_2025r1.pdf",
+      "size_bytes": 7465309,
+      "size_mb": 7.12,
+      "modified": "2025-09-14T15:50:58.655562"
+    },
+    {
+      "filename": "act_developers_guide_2025r1.pdf",
+      "size_bytes": 5141236,
+      "size_mb": 4.9,
+      "modified": "2025-09-14T15:51:03.048150"
+    },
+    {
+      "filename": "workbench_scripting_guide.pdf",
+      "size_bytes": 6987550,
+      "size_mb": 6.66,
+      "modified": "2022-01-10T10:13:10"
+    }
+  ],
+  "html_resources": [
+    {
+      "directory": "mechanical.docs.pyansys.com",
+      "html_files": 133,
+      "total_files": 253,
+      "modified": "2025-09-14T15:51:04.913717"
+    },
+    {
+      "directory": "scripting.mechanical.docs.pyansys.com",
+      "html_files": 5,
+      "total_files": 17,
+      "modified": "2025-09-14T15:51:03.476886"
+    }
+  ],
+  "statistics": {
+    "total_pdfs": 4,
+    "total_html_sites": 2,
+    "total_size_mb": 20.78
+  }
+}
