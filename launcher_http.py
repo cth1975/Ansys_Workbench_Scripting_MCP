@@ -12,11 +12,9 @@ This launcher:
 import subprocess
 import sys
 import time
-import webbrowser
 from pathlib import Path
 import signal
 import requests
-import urllib.parse
 
 
 class MCPHTTPLauncher:
@@ -112,7 +110,7 @@ class MCPHTTPLauncher:
 
         try:
             self.inspector_process = subprocess.Popen(
-                ["npx", "@modelcontextprotocol/inspector"],
+                ["npx", "@modelcontextprotocol/inspector", "--transport", "sse", "--server-url", self.sse_url],
                 cwd=str(self.project_dir),
                 stdout=subprocess.PIPE,
                 stderr=subprocess.PIPE
@@ -130,12 +128,11 @@ class MCPHTTPLauncher:
                 print("⏳ Waiting for web interface to be ready...")
                 time.sleep(3)
 
-                # Open browser with pre-configured SSE URL
-                encoded_sse_url = urllib.parse.quote(self.sse_url, safe='')
-                inspector_url = f"http://localhost:5173?transport=sse&url={encoded_sse_url}"
-                print(f"🌐 Opening browser to MCP Inspector with SSE pre-configured")
-                print(f"   URL: {self.sse_url}")
-                webbrowser.open(inspector_url)
+                # MCP Inspector will open automatically with pre-configured settings
+                print(f"🌐 MCP Inspector started with SSE transport pre-configured")
+                print(f"   Server URL: {self.sse_url}")
+                print(f"   Inspector URL: http://localhost:5173")
+                print(f"   ✓ Settings auto-configured - should connect automatically!")
 
                 self.print_connection_instructions()
                 return True
@@ -161,12 +158,12 @@ class MCPHTTPLauncher:
         print(f"│  Server URL:       {self.sse_url}                         │")
         print("│                                                           │")
         print("└───────────────────────────────────────────────────────────┘")
-        print("\n🔧 Connection should be automatic, but if needed:")
-        print("   1. Transport Type should be pre-set to 'SSE'")
-        print(f"   2. Server URL should be pre-filled: {self.sse_url}")
-        print("   3. Click 'Connect' button if not already connected")
-        print("   4. Wait for green 'Connected' status")
-        print("   5. Navigate to 'Resources' or 'Prompts' tabs")
+        print("\n🔧 Connection is fully automatic:")
+        print("   ✓ Transport Type: SSE (pre-configured)")
+        print(f"   ✓ Server URL: {self.sse_url} (pre-configured)")
+        print("   ✓ Should connect automatically on startup")
+        print("   → If not connected, click 'Connect' button")
+        print("   → Navigate to 'Resources' or 'Prompts' tabs to test")
         print("\n📦 Available resources:")
         print("   • Company Info (text://company_info)")
         print("   • Product Catalog (text://product_catalog)")
