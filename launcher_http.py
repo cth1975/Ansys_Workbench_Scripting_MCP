@@ -40,6 +40,18 @@ class MCPHTTPLauncher:
             return False
 
         try:
+            import fitz  # PyMuPDF
+            print("✓ PyMuPDF for PDF processing found")
+        except ImportError:
+            print("✗ PyMuPDF not found. Installing...")
+            try:
+                subprocess.run([sys.executable, "-m", "pip", "install", "PyMuPDF"], check=True)
+                print("✓ PyMuPDF installed")
+            except subprocess.CalledProcessError:
+                print("✗ Failed to install PyMuPDF")
+                return False
+
+        try:
             import uvicorn
             import starlette
             print("✓ HTTP server dependencies found")
@@ -164,14 +176,27 @@ class MCPHTTPLauncher:
         print("   ✓ Should connect automatically on startup")
         print("   → If not connected, click 'Connect' button")
         print("   → Navigate to 'Resources' or 'Prompts' tabs to test")
-        print("\n📦 Available resources:")
-        print("   • Company Info (text://company_info)")
-        print("   • Product Catalog (text://product_catalog)")
-        print("   • API Documentation (text://api_docs)")
-        print("\n🎯 Available prompts:")
-        print("   • analyze_data - Business data analysis")
-        print("   • write_email - Professional email templates")
-        print("   • code_review - Code review checklists")
+        print("\n📦 Available resources (9 total):")
+        print("   • ansys://workbench/overview - Workbench automation overview")
+        print("   • ansys://pymechanical/architecture - PyMechanical implementation details")
+        print("   • ansys://python/cpython-vs-ironpython - Python implementation comparison")
+        print("   • ansys://reference/quick-guide - Quick reference for common tasks")
+        print("   • ansys://act/development - ACT development guide")
+        print("   • ansys://dpf/post-processing - DPF post-processing reference")
+        print("   • ansys://scripting/examples - Comprehensive scripting examples")
+        print("   • ansys://api/reference - API reference documentation")
+        print("\n🛠️  Available tools (3 total):")
+        print("   • search_ansys_docs - Search across 2000+ pages of documentation")
+        print("   • get_code_example - Find code examples for specific topics")
+        print("   • get_chapter_content - Extract specific chapters from PDF manuals")
+        print("\n🎯 Available prompts (3 total):")
+        print("   • generate_ansys_script - Generate automation scripts")
+        print("   • debug_ansys_error - Diagnose and resolve scripting errors")
+        print("   • convert_ironpython_to_cpython - Migrate legacy scripts")
+        print("\n📚 Documentation corpus:")
+        print("   • 40+ MB extracted from 2042 pages across 4 Ansys manuals")
+        print("   • Full-text search with relevance scoring")
+        print("   • Chapter-level access to PDF content")
         print(f"\n🌐 Server running at: {self.server_url}")
         print(f"📡 SSE endpoint at: {self.sse_url}")
         print("\n⚠️  Keep this terminal window open while using MCP Inspector!")

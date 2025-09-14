@@ -1,0 +1,2071 @@
+{
+  "file": "dpf_post_cheat_sheet.pdf",
+  "total_pages": 1,
+  "extracted_date": "2025-09-14T16:21:23.464601",
+  "pages": [
+    {
+      "page_number": 1,
+      "text": "PyDPF-Post cheat sheet\nVersion: 0.5 (stable) - API is subject to change\nLoad results file\nInstantiate a simulation object with the path to the results file:\nOn Windows, load the result file:\nfrom ansys.dpf import post\nfrom ansys.dpf.post import examples\nsim = post.load_simulation(r'C:\\Users\\user\\file.rst')\nOn Linux, load the result file:\nsim = post.load_simulation(r'/home/user/file.rst')\nFetch result metadata\nDisplay metadata from the simulation object:\nexample_path = examples.find_static_rst()\nsimulation = post.load_simulation(example_path)\nprint(simulation)\nAccess mesh\nAccess the mesh:\nmesh = simulation.mesh\nprint(mesh)\nAccess results\nGet the displacement result:\ndisp = simulation.displacement()\nx_disp = simulation.displacement(components=[\"X\"])\n# Extract displacement on specific nodes from already\nextracted large data set\nnodes_disp = disp.select(node_ids=[1, 10, 100])\n# Extract displacement on specific nodes from results\nfile\nnodes_disp = simulation.displacement(node_ids=[1, 10,\n100])\nAccess the stress and strain results:\nelem_nodal_stress = simulation.stress()\nnodal_stress = simulation.stress_nodal()\nelemental_stress = simulation.stress_elemental()\n# Extract elemental stresses on specific elements from\nresults file\nelemental_stress = simulation.stress_elemental(\nelement_ids=[5, 6, 7])\n# Nodal strain\nstrain = simulation.elastic_strain_nodal()\nEnable auto-completion for result\nquantities\nPostprocess result quantities using a physics-oriented API,\nwhich enable auto-completion:\nReturn static simulation results:\nsimulation = post.StaticMechanicalSimulation(\nexample_path)\nprint(simulation)\ndisplacement = simulation.displacement()\nReturn modal simulation results:\nsimulation = post.ModalMechanicalSimulation(\nexample_path)\n# Print natural frequencies\nprint(simulation.time_freq_support)\nReturn transient simulation results and create an animation:\nsimulation = post.TransientMechanicalSimulation(\nexample_path)\nprint(simulation)\n# Query the displacement vectorial field for all times\ndisplacement = simulation.displacement(all_sets=True)\n# Create animation showing the norm of vectorial\nfields with several components\ndisplacement.animate(deform=True, title=\"U\")\nReturn harmonic simulation results:\nsimulation = post.HarmonicMechanicalSimulation(\nexample_path)\nprint(simulation.time_freq_support)\ndisplacement = simulation.displacement(set_ids=[1, 2])\nsubdisp = displacement.select(complex=0, set_ids=1)\nsubdisp.plot(title=\"U tot real\")\nsubdisp = displacement.select(complex=1, set_ids=1)\nsubdisp.plot(title=\"U tot imaginary\")\nPlot Results\nPlot total deformation (norm of the displacement vector field)\nresults:\n# Instantiate the solution object\nexample_path = examples.find_static_rst()\nsimulation = post.load_simulation(example_path)\ndisplacement_norm = simulation.displacement(norm=True)\n# Plot the data and save the image\ndisplacement_norm.plot(screenshot=\"total_disp.png\")\nCreate and manipulate a dataframe\nCreate a DPF dataframe by extracting a result from a\nsimulation, which can be manipulated and viewed differently:\nsimulation = post.StaticMechanicalSimulation(\nexample_path)\n# Extract a result as a dataframe\ndisplacement_dataframe = simulation.displacement(\nall_sets=True)\nReturn the dataframe’s column labels:\nprint(displacement_dataframe.columns)\nDisplay the results index:\nprint(displacement_dataframe.columns.results_index)\nDisplay the values available in the index:\nprint(displacement_dataframe.columns[0].values)\nChange the number of data rows or columns displayed:\ndisplacement_dataframe.display_max_rows = 9\nprint(displacement_dataframe)\nSelect specific columns or rows, using index names as\narguments for the DataFrame.select method and specified\nlists of values:\ndisp_X_1 = displacement_dataframe.select(\nset_ids=[1], node_ids=[4872, 9005], components=[\"X\n\"]\n)\nprint(disp_X_1)\nExtract displacement data as an array contained in a\ndataframe:\nprint(disp_X_1.array)\n# Plot a dataframe\ndisplacement_dataframe.plot()\n# Animate a transient dataframe\ndisplacement_dataframe.animate()\nReferences from PyDPF-Post documentation\n• Getting started\n• User guide\n• Examples\n• API reference\nGetting started with PyDPF-Post\nPyDPF-Post on GitHub Visit\npost.docs.pyansys.com\n",
+      "clean_text": "PyDPF-Post cheat sheet Version: 0.5 (stable) - API is subject to change Load results file Instantiate a simulation object with the path to the results file: On Windows, load the result file: from ansys.dpf import post from ansys.dpf.post import examples sim = post.load_simulation(r'C:\\Users\\user\\file.rst') On Linux, load the result file: sim = post.load_simulation(r'/home/user/file.rst') Fetch result metadata Display metadata from the simulation object: example_path = examples.find_static_rst() simulation = post.load_simulation(example_path) print(simulation) Access mesh Access the mesh: mesh = simulation.mesh print(mesh) Access results Get the displacement result: disp = simulation.displacement() x_disp = simulation.displacement(components=[\"X\"]) # Extract displacement on specific nodes from already extracted large data set nodes_disp = disp.select(node_ids=[1, 10, 100]) # Extract displacement on specific nodes from results file nodes_disp = simulation.displacement(node_ids=[1, 10, 100]) Access the stress and strain results: elem_nodal_stress = simulation.stress() nodal_stress = simulation.stress_nodal() elemental_stress = simulation.stress_elemental() # Extract elemental stresses on specific elements from results file elemental_stress = simulation.stress_elemental( element_ids=[5, 6, 7]) # Nodal strain strain = simulation.elastic_strain_nodal() Enable auto-completion for result quantities Postprocess result quantities using a physics-oriented API, which enable auto-completion: Return static simulation results: simulation = post.StaticMechanicalSimulation( example_path) print(simulation) displacement = simulation.displacement() Return modal simulation results: simulation = post.ModalMechanicalSimulation( example_path) # Print natural frequencies print(simulation.time_freq_support) Return transient simulation results and create an animation: simulation = post.TransientMechanicalSimulation( example_path) print(simulation) # Query the displacement vectorial field for all times displacement = simulation.displacement(all_sets=True) # Create animation showing the norm of vectorial fields with several components displacement.animate(deform=True, title=\"U\") Return harmonic simulation results: simulation = post.HarmonicMechanicalSimulation( example_path) print(simulation.time_freq_support) displacement = simulation.displacement(set_ids=[1, 2]) subdisp = displacement.select(complex=0, set_ids=1) subdisp.plot(title=\"U tot real\") subdisp = displacement.select(complex=1, set_ids=1) subdisp.plot(title=\"U tot imaginary\") Plot Results Plot total deformation (norm of the displacement vector field) results: # Instantiate the solution object example_path = examples.find_static_rst() simulation = post.load_simulation(example_path) displacement_norm = simulation.displacement(norm=True) # Plot the data and save the image displacement_norm.plot(screenshot=\"total_disp.png\") Create and manipulate a dataframe Create a DPF dataframe by extracting a result from a simulation, which can be manipulated and viewed differently: simulation = post.StaticMechanicalSimulation( example_path) # Extract a result as a dataframe displacement_dataframe = simulation.displacement( all_sets=True) Return the dataframe’s column labels: print(displacement_dataframe.columns) Display the results index: print(displacement_dataframe.columns.results_index) Display the values available in the index: print(displacement_dataframe.columns[0].values) Change the number of data rows or columns displayed: displacement_dataframe.display_max_rows = 9 print(displacement_dataframe) Select specific columns or rows, using index names as arguments for the DataFrame.select method and specified lists of values: disp_X_1 = displacement_dataframe.select( set_ids=[1], node_ids=[4872, 9005], components=[\"X \"] ) print(disp_X_1) Extract displacement data as an array contained in a dataframe: print(disp_X_1.array) # Plot a dataframe displacement_dataframe.plot() # Animate a transient dataframe displacement_dataframe.animate() References from PyDPF-Post documentation • Getting started • User guide • Examples • API reference Getting started with PyDPF-Post PyDPF-Post on GitHub Visit post.docs.pyansys.com",
+      "word_count": 443,
+      "blocks": [
+        {
+          "text": "PyDPF-Post cheat sheet",
+          "font": "Montserrat-Bold",
+          "size": 24.787099838256836,
+          "flags": 20,
+          "bbox": [
+            238.85000610351562,
+            9.84286880493164,
+            553.1505737304688,
+            34.629966735839844
+          ]
+        },
+        {
+          "text": "Version: 0.5 (stable) - API is subject to change",
+          "font": "Montserrat-Bold",
+          "size": 8.966400146484375,
+          "flags": 20,
+          "bbox": [
+            288.42999267578125,
+            43.290122985839844,
+            503.5699157714844,
+            52.25652313232422
+          ]
+        },
+        {
+          "text": "Load results file",
+          "font": "Montserrat-Bold",
+          "size": 11.9552001953125,
+          "flags": 20,
+          "bbox": [
+            27.341999053955078,
+            74.41120910644531,
+            126.9527587890625,
+            86.36640930175781
+          ]
+        },
+        {
+          "text": "Instantiate a simulation object with the path to the results file:",
+          "font": "Montserrat-Regular",
+          "size": 7.970099925994873,
+          "flags": 4,
+          "bbox": [
+            18.0,
+            89.01191711425781,
+            263.3595275878906,
+            96.98201751708984
+          ]
+        },
+        {
+          "text": "On Windows, load the result file:",
+          "font": "Montserrat-Regular",
+          "size": 7.970099925994873,
+          "flags": 4,
+          "bbox": [
+            18.0,
+            104.14591979980469,
+            146.32655334472656,
+            112.11602020263672
+          ]
+        },
+        {
+          "text": "from",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            18.0,
+            120.0587158203125,
+            36.171844482421875,
+            127.63031768798828
+          ]
+        },
+        {
+          "text": " ansys.dpf",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            36.171844482421875,
+            120.0587158203125,
+            81.60145568847656,
+            127.63031768798828
+          ]
+        },
+        {
+          "text": " import",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            81.60145568847656,
+            120.0587158203125,
+            113.40218353271484,
+            127.63031768798828
+          ]
+        },
+        {
+          "text": " post",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            113.40218353271484,
+            120.0587158203125,
+            136.11697387695312,
+            127.63031768798828
+          ]
+        },
+        {
+          "text": "from",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            18.0,
+            129.522705078125,
+            36.171844482421875,
+            137.09429931640625
+          ]
+        },
+        {
+          "text": " ansys.dpf.post",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            36.171844482421875,
+            129.522705078125,
+            104.3162612915039,
+            137.09429931640625
+          ]
+        },
+        {
+          "text": " import",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            104.3162612915039,
+            129.522705078125,
+            136.11697387695312,
+            137.09429931640625
+          ]
+        },
+        {
+          "text": " examples",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            136.11697387695312,
+            129.522705078125,
+            177.00355529785156,
+            137.09429931640625
+          ]
+        },
+        {
+          "text": "sim = post.load_simulation(",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            18.0,
+            148.45172119140625,
+            140.65992736816406,
+            156.0233154296875
+          ]
+        },
+        {
+          "text": "r'C:\\Users\\user\\file.rst'",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            140.65992736816406,
+            148.45172119140625,
+            254.2359619140625,
+            156.0233154296875
+          ]
+        },
+        {
+          "text": ")",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            254.2360076904297,
+            148.45172119140625,
+            258.7789611816406,
+            156.0233154296875
+          ]
+        },
+        {
+          "text": "On Linux, load the result file:",
+          "font": "Montserrat-Regular",
+          "size": 7.970099925994873,
+          "flags": 4,
+          "bbox": [
+            18.0,
+            165.0229034423828,
+            130.79286193847656,
+            172.99301147460938
+          ]
+        },
+        {
+          "text": "sim = post.load_simulation(",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            18.0,
+            180.93572998046875,
+            140.65992736816406,
+            188.50732421875
+          ]
+        },
+        {
+          "text": "r'/home/user/file.rst'",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            140.65992736816406,
+            180.93572998046875,
+            240.60696411132812,
+            188.50732421875
+          ]
+        },
+        {
+          "text": ")",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            240.6070098876953,
+            180.93572998046875,
+            245.14996337890625,
+            188.50732421875
+          ]
+        },
+        {
+          "text": "Fetch result metadata",
+          "font": "Montserrat-Bold",
+          "size": 11.9552001953125,
+          "flags": 20,
+          "bbox": [
+            27.341999053955078,
+            202.55616760253906,
+            166.7994384765625,
+            214.51136779785156
+          ]
+        },
+        {
+          "text": "Display metadata from the simulation object:",
+          "font": "Montserrat-Regular",
+          "size": 7.970099925994873,
+          "flags": 4,
+          "bbox": [
+            18.0,
+            217.1569061279297,
+            198.84156799316406,
+            225.12701416015625
+          ]
+        },
+        {
+          "text": "example_path = examples.find_static_rst()",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            18.0,
+            233.06973266601562,
+            204.2612762451172,
+            240.64132690429688
+          ]
+        },
+        {
+          "text": "simulation = post.load_simulation(example_path)",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            18.0,
+            242.53472900390625,
+            231.5189971923828,
+            250.1063232421875
+          ]
+        },
+        {
+          "text": "print",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            18.0,
+            251.99871826171875,
+            40.714805603027344,
+            259.5703125
+          ]
+        },
+        {
+          "text": "(simulation)",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            40.714805603027344,
+            251.99871826171875,
+            95.23033905029297,
+            259.5703125
+          ]
+        },
+        {
+          "text": "Access mesh",
+          "font": "Montserrat-Bold",
+          "size": 11.9552001953125,
+          "flags": 20,
+          "bbox": [
+            27.341999053955078,
+            273.62017822265625,
+            108.76888275146484,
+            285.57537841796875
+          ]
+        },
+        {
+          "text": "Access the mesh:",
+          "font": "Montserrat-Regular",
+          "size": 7.970099925994873,
+          "flags": 4,
+          "bbox": [
+            18.0,
+            288.2199401855469,
+            86.98918914794922,
+            296.1900329589844
+          ]
+        },
+        {
+          "text": "mesh = simulation.mesh",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            18.0,
+            304.1327209472656,
+            117.94514465332031,
+            311.7043151855469
+          ]
+        },
+        {
+          "text": "print",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            18.0,
+            313.59771728515625,
+            40.714805603027344,
+            321.1693115234375
+          ]
+        },
+        {
+          "text": "(mesh)",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            40.714805603027344,
+            313.59771728515625,
+            67.97257232666016,
+            321.1693115234375
+          ]
+        },
+        {
+          "text": "Access results",
+          "font": "Montserrat-Bold",
+          "size": 11.9552001953125,
+          "flags": 20,
+          "bbox": [
+            27.341999053955078,
+            335.2181701660156,
+            116.79082489013672,
+            347.1733703613281
+          ]
+        },
+        {
+          "text": "Get the displacement result:",
+          "font": "Montserrat-Regular",
+          "size": 7.970099925994873,
+          "flags": 4,
+          "bbox": [
+            18.0,
+            349.8189392089844,
+            131.00009155273438,
+            357.7890319824219
+          ]
+        },
+        {
+          "text": "disp = simulation.displacement()",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            18.0,
+            365.7317199707031,
+            163.37469482421875,
+            373.3033142089844
+          ]
+        },
+        {
+          "text": "x_disp = simulation.displacement(components=[",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            18.0,
+            375.19671630859375,
+            222.43309020996094,
+            382.768310546875
+          ]
+        },
+        {
+          "text": "\"X\"",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            222.43309020996094,
+            375.19671630859375,
+            236.06195068359375,
+            382.768310546875
+          ]
+        },
+        {
+          "text": "])",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            236.06195068359375,
+            375.19671630859375,
+            245.14785766601562,
+            382.768310546875
+          ]
+        },
+        {
+          "text": "# Extract displacement on specific nodes from already",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            18.0,
+            384.6607360839844,
+            258.7767333984375,
+            392.2323303222656
+          ]
+        },
+        {
+          "text": "extracted large data set",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            37.92499923706055,
+            394.1257019042969,
+            146.95602416992188,
+            401.6972961425781
+          ]
+        },
+        {
+          "text": "nodes_disp = disp.select(node_ids=[1, 10, 100])",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            18.0,
+            403.5897216796875,
+            231.5189971923828,
+            411.16131591796875
+          ]
+        },
+        {
+          "text": "# Extract displacement on specific nodes from results",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            18.0,
+            413.0547180175781,
+            258.7767333984375,
+            420.6263122558594
+          ]
+        },
+        {
+          "text": "file",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            37.92499923706055,
+            422.5187072753906,
+            56.09684371948242,
+            430.0903015136719
+          ]
+        },
+        {
+          "text": "nodes_disp = simulation.displacement(node_ids=[1, 10,",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            18.0,
+            431.9837341308594,
+            258.7767333984375,
+            439.5553283691406
+          ]
+        },
+        {
+          "text": "100])",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            37.92499923706055,
+            441.4477233886719,
+            60.63980484008789,
+            449.0193176269531
+          ]
+        },
+        {
+          "text": "Access the stress and strain results:",
+          "font": "Montserrat-Regular",
+          "size": 7.970099925994873,
+          "flags": 4,
+          "bbox": [
+            18.0,
+            458.0189514160156,
+            157.68399047851562,
+            465.9890441894531
+          ]
+        },
+        {
+          "text": "elem_nodal_stress = simulation.stress()",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            18.0,
+            473.9317321777344,
+            195.1753692626953,
+            481.5033264160156
+          ]
+        },
+        {
+          "text": "nodal_stress = simulation.stress_nodal()",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            18.0,
+            483.3957214355469,
+            199.71832275390625,
+            490.9673156738281
+          ]
+        },
+        {
+          "text": "elemental_stress = simulation.stress_elemental()",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            18.0,
+            492.8607177734375,
+            236.06195068359375,
+            500.43231201171875
+          ]
+        },
+        {
+          "text": "# Extract elemental stresses on specific elements from",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            18.0,
+            502.3247375488281,
+            263.3197021484375,
+            509.8963317871094
+          ]
+        },
+        {
+          "text": "results file",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            42.46799850463867,
+            511.7897033691406,
+            96.98352813720703,
+            519.361328125
+          ]
+        },
+        {
+          "text": "elemental_stress = simulation.stress_elemental(",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            18.0,
+            521.2537231445312,
+            231.5189971923828,
+            528.8253173828125
+          ]
+        },
+        {
+          "text": "element_ids=[5, 6, 7])",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            37.92499923706055,
+            530.71875,
+            137.8701171875,
+            538.2903442382812
+          ]
+        },
+        {
+          "text": "# Nodal strain",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            18.0,
+            540.1827392578125,
+            81.60145568847656,
+            547.7543334960938
+          ]
+        },
+        {
+          "text": "strain = simulation.elastic_strain_nodal()",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            18.0,
+            549.6477661132812,
+            208.80422973632812,
+            557.2193603515625
+          ]
+        },
+        {
+          "text": "Enable auto-completion for result",
+          "font": "Montserrat-Bold",
+          "size": 11.9552001953125,
+          "flags": 20,
+          "bbox": [
+            282.6629943847656,
+            74.41120910644531,
+            494.71234130859375,
+            86.36640930175781
+          ]
+        },
+        {
+          "text": "quantities",
+          "font": "Montserrat-Bold",
+          "size": 11.9552001953125,
+          "flags": 20,
+          "bbox": [
+            273.32098388671875,
+            88.35920715332031,
+            336.9106750488281,
+            100.31440734863281
+          ]
+        },
+        {
+          "text": "Postprocess result quantities using a physics-oriented API,",
+          "font": "Montserrat-Regular",
+          "size": 7.970099925994873,
+          "flags": 4,
+          "bbox": [
+            273.32098388671875,
+            102.95893859863281,
+            505.7688903808594,
+            110.92903900146484
+          ]
+        },
+        {
+          "text": "which enable auto-completion:",
+          "font": "Montserrat-Regular",
+          "size": 7.970099925994873,
+          "flags": 4,
+          "bbox": [
+            273.32098388671875,
+            112.42393493652344,
+            398.1805419921875,
+            120.39403533935547
+          ]
+        },
+        {
+          "text": "Return static simulation results:",
+          "font": "Montserrat-Regular",
+          "size": 7.970099925994873,
+          "flags": 4,
+          "bbox": [
+            273.32098388671875,
+            127.55793762207031,
+            399.6231689453125,
+            135.52804565429688
+          ]
+        },
+        {
+          "text": "simulation = post.StaticMechanicalSimulation(",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            273.3210144042969,
+            144.47970581054688,
+            477.7546081542969,
+            152.05130004882812
+          ]
+        },
+        {
+          "text": "example_path)",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            293.2460021972656,
+            153.94473266601562,
+            352.3045959472656,
+            161.51632690429688
+          ]
+        },
+        {
+          "text": "print",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            273.3210144042969,
+            163.40872192382812,
+            296.0358581542969,
+            170.98031616210938
+          ]
+        },
+        {
+          "text": "(simulation)",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            296.0358581542969,
+            163.40872192382812,
+            350.5514831542969,
+            170.98031616210938
+          ]
+        },
+        {
+          "text": "displacement = simulation.displacement()",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            273.3210144042969,
+            172.87371826171875,
+            455.0397644042969,
+            180.4453125
+          ]
+        },
+        {
+          "text": "Return modal simulation results:",
+          "font": "Montserrat-Regular",
+          "size": 7.970099925994873,
+          "flags": 4,
+          "bbox": [
+            273.3210144042969,
+            190.4529266357422,
+            403.6241760253906,
+            198.42303466796875
+          ]
+        },
+        {
+          "text": "simulation = post.ModalMechanicalSimulation(",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            273.3210144042969,
+            207.37472534179688,
+            473.2116394042969,
+            214.94631958007812
+          ]
+        },
+        {
+          "text": "example_path)",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            293.2460021972656,
+            216.8397216796875,
+            352.3045959472656,
+            224.41131591796875
+          ]
+        },
+        {
+          "text": "# Print natural frequencies",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            273.3210144042969,
+            226.3037109375,
+            395.9811706542969,
+            233.87530517578125
+          ]
+        },
+        {
+          "text": "print",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            273.3210144042969,
+            235.76870727539062,
+            296.0358581542969,
+            243.34030151367188
+          ]
+        },
+        {
+          "text": "(simulation.time_freq_support)",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            296.0358581542969,
+            235.76870727539062,
+            432.3249206542969,
+            243.34030151367188
+          ]
+        },
+        {
+          "text": "Return transient simulation results and create an animation:",
+          "font": "Montserrat-Regular",
+          "size": 7.970099925994873,
+          "flags": 4,
+          "bbox": [
+            273.3210144042969,
+            253.34791564941406,
+            513.563720703125,
+            261.3180236816406
+          ]
+        },
+        {
+          "text": "simulation = post.TransientMechanicalSimulation(",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            273.3210144042969,
+            270.26971435546875,
+            491.3835144042969,
+            277.84130859375
+          ]
+        },
+        {
+          "text": "example_path)",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            293.2460021972656,
+            279.7347106933594,
+            352.3045959472656,
+            287.3063049316406
+          ]
+        },
+        {
+          "text": "print",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            273.3210144042969,
+            289.19873046875,
+            296.0358581542969,
+            296.77032470703125
+          ]
+        },
+        {
+          "text": "(simulation)",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            296.0358581542969,
+            289.19873046875,
+            350.5514831542969,
+            296.77032470703125
+          ]
+        },
+        {
+          "text": "# Query the displacement vectorial field for all times",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            273.3210144042969,
+            298.6637268066406,
+            518.6412963867188,
+            306.2353210449219
+          ]
+        },
+        {
+          "text": "displacement = simulation.displacement(all_sets=True)",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            273.3210144042969,
+            308.1277160644531,
+            514.0983276367188,
+            315.6993103027344
+          ]
+        },
+        {
+          "text": "# Create animation showing the norm of vectorial",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            273.3210144042969,
+            317.59271240234375,
+            491.3835144042969,
+            325.164306640625
+          ]
+        },
+        {
+          "text": "fields with several components",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            293.2460021972656,
+            327.0567321777344,
+            429.5350646972656,
+            334.6283264160156
+          ]
+        },
+        {
+          "text": "displacement.animate(deform=True, title=",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            273.3210144042969,
+            336.521728515625,
+            455.0397644042969,
+            344.09332275390625
+          ]
+        },
+        {
+          "text": "\"U\"",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            455.0397644042969,
+            336.521728515625,
+            468.6686706542969,
+            344.09332275390625
+          ]
+        },
+        {
+          "text": ")",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            468.6686706542969,
+            336.521728515625,
+            473.2116394042969,
+            344.09332275390625
+          ]
+        },
+        {
+          "text": "Return harmonic simulation results:",
+          "font": "Montserrat-Regular",
+          "size": 7.970099925994873,
+          "flags": 4,
+          "bbox": [
+            273.3210144042969,
+            354.1009216308594,
+            416.6313781738281,
+            362.0710144042969
+          ]
+        },
+        {
+          "text": "simulation = post.HarmonicMechanicalSimulation(",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            273.3210144042969,
+            371.0237121582031,
+            486.8405456542969,
+            378.5953063964844
+          ]
+        },
+        {
+          "text": "example_path)",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            293.2460021972656,
+            380.4877014160156,
+            352.3045959472656,
+            388.0592956542969
+          ]
+        },
+        {
+          "text": "print",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            273.3210144042969,
+            389.9527282714844,
+            296.0358581542969,
+            397.5243225097656
+          ]
+        },
+        {
+          "text": "(simulation.time_freq_support)",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            296.0358581542969,
+            389.9527282714844,
+            432.3249206542969,
+            397.5243225097656
+          ]
+        },
+        {
+          "text": "displacement = simulation.displacement(set_ids=[1, 2])",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            273.3210144042969,
+            399.4167175292969,
+            518.6412963867188,
+            406.9883117675781
+          ]
+        },
+        {
+          "text": "subdisp = displacement.select(",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            273.3210144042969,
+            408.8817138671875,
+            409.6100769042969,
+            416.45330810546875
+          ]
+        },
+        {
+          "text": "complex",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            409.6100769042969,
+            408.8817138671875,
+            441.4108581542969,
+            416.45330810546875
+          ]
+        },
+        {
+          "text": "=0, set_ids=1)",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            441.4108581542969,
+            408.8817138671875,
+            505.0124206542969,
+            416.45330810546875
+          ]
+        },
+        {
+          "text": "subdisp.plot(title=",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            273.3210144042969,
+            418.3457336425781,
+            359.6374206542969,
+            425.9173278808594
+          ]
+        },
+        {
+          "text": "\"U tot real\"",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            359.6374206542969,
+            418.3457336425781,
+            414.1530456542969,
+            425.9173278808594
+          ]
+        },
+        {
+          "text": ")",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            414.1530456542969,
+            418.3457336425781,
+            418.6960144042969,
+            425.9173278808594
+          ]
+        },
+        {
+          "text": "subdisp = displacement.select(",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            273.3210144042969,
+            427.8106994628906,
+            409.6100769042969,
+            435.3822937011719
+          ]
+        },
+        {
+          "text": "complex",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            409.6100769042969,
+            427.8106994628906,
+            441.4108581542969,
+            435.3822937011719
+          ]
+        },
+        {
+          "text": "=1, set_ids=1)",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            441.4108581542969,
+            427.8106994628906,
+            505.0124206542969,
+            435.3822937011719
+          ]
+        },
+        {
+          "text": "subdisp.plot(title=",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            273.3210144042969,
+            437.27471923828125,
+            359.6374206542969,
+            444.8463134765625
+          ]
+        },
+        {
+          "text": "\"U tot imaginary\"",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            359.6374206542969,
+            437.27471923828125,
+            436.8678894042969,
+            444.8463134765625
+          ]
+        },
+        {
+          "text": ")",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            436.8678894042969,
+            437.27471923828125,
+            441.4108581542969,
+            444.8463134765625
+          ]
+        },
+        {
+          "text": "Plot Results",
+          "font": "Montserrat-Bold",
+          "size": 11.9552001953125,
+          "flags": 20,
+          "bbox": [
+            282.6629943847656,
+            460.32916259765625,
+            357.93292236328125,
+            472.28436279296875
+          ]
+        },
+        {
+          "text": "Plot total deformation (norm of the displacement vector field)",
+          "font": "Montserrat-Regular",
+          "size": 7.970099925994873,
+          "flags": 4,
+          "bbox": [
+            273.32098388671875,
+            474.929931640625,
+            518.6805419921875,
+            482.9000244140625
+          ]
+        },
+        {
+          "text": "results:",
+          "font": "Montserrat-Regular",
+          "size": 7.970099925994873,
+          "flags": 4,
+          "bbox": [
+            273.32098388671875,
+            484.3939208984375,
+            301.47137451171875,
+            492.364013671875
+          ]
+        },
+        {
+          "text": "# Instantiate the solution object",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            273.3210144042969,
+            501.3157043457031,
+            423.2389831542969,
+            508.8872985839844
+          ]
+        },
+        {
+          "text": "example_path = examples.find_static_rst()",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            273.3210144042969,
+            510.7807312011719,
+            459.5827331542969,
+            518.3523559570312
+          ]
+        },
+        {
+          "text": "simulation = post.load_simulation(example_path)",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            273.3210144042969,
+            520.2447509765625,
+            486.8405456542969,
+            527.8163452148438
+          ]
+        },
+        {
+          "text": "displacement_norm = simulation.displacement(norm=True)",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            273.3210144042969,
+            529.709716796875,
+            518.6412963867188,
+            537.2813110351562
+          ]
+        },
+        {
+          "text": "# Plot the data and save the image",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            273.3210144042969,
+            539.1737670898438,
+            427.7819519042969,
+            546.745361328125
+          ]
+        },
+        {
+          "text": "displacement_norm.plot(screenshot=",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            273.3210144042969,
+            548.6387329101562,
+            427.7819519042969,
+            556.2103271484375
+          ]
+        },
+        {
+          "text": "\"total_disp.png\"",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            427.7819519042969,
+            548.6387329101562,
+            500.4694519042969,
+            556.2103271484375
+          ]
+        },
+        {
+          "text": ")",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            500.4694519042969,
+            548.6387329101562,
+            505.0124206542969,
+            556.2103271484375
+          ]
+        },
+        {
+          "text": "Create and manipulate a dataframe",
+          "font": "Montserrat-Bold",
+          "size": 11.9552001953125,
+          "flags": 20,
+          "bbox": [
+            537.9840087890625,
+            74.41120910644531,
+            760.7929077148438,
+            86.36640930175781
+          ]
+        },
+        {
+          "text": "Create a DPF dataframe by extracting a result from a",
+          "font": "Montserrat-Regular",
+          "size": 7.970099925994873,
+          "flags": 4,
+          "bbox": [
+            528.6420288085938,
+            91.09297180175781,
+            738.3751831054688,
+            99.06307220458984
+          ]
+        },
+        {
+          "text": "simulation, which can be manipulated and viewed differently:",
+          "font": "Montserrat-Regular",
+          "size": 7.970099925994873,
+          "flags": 4,
+          "bbox": [
+            528.6420288085938,
+            100.55696105957031,
+            774.0017700195312,
+            108.52706146240234
+          ]
+        },
+        {
+          "text": "simulation = post.StaticMechanicalSimulation(",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            528.6420288085938,
+            119.06072998046875,
+            733.0756225585938,
+            126.63233184814453
+          ]
+        },
+        {
+          "text": "example_path)",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            548.5670166015625,
+            128.52572631835938,
+            607.6256103515625,
+            136.09732055664062
+          ]
+        },
+        {
+          "text": "# Extract a result as a dataframe",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            528.6420288085938,
+            137.98971557617188,
+            678.5599975585938,
+            145.56130981445312
+          ]
+        },
+        {
+          "text": "displacement_dataframe = simulation.displacement(",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            528.6420288085938,
+            147.4547119140625,
+            751.2474975585938,
+            155.02630615234375
+          ]
+        },
+        {
+          "text": "all_sets=True)",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            548.5670166015625,
+            156.91873168945312,
+            612.1685791015625,
+            164.49032592773438
+          ]
+        },
+        {
+          "text": "Return the dataframe’s column labels:",
+          "font": "Montserrat-Regular",
+          "size": 7.970099925994873,
+          "flags": 4,
+          "bbox": [
+            528.6420288085938,
+            177.6569061279297,
+            680.69580078125,
+            185.62701416015625
+          ]
+        },
+        {
+          "text": "print",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            528.6420288085938,
+            196.16070556640625,
+            551.3568725585938,
+            203.7322998046875
+          ]
+        },
+        {
+          "text": "(displacement_dataframe.columns)",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            551.3568725585938,
+            196.16070556640625,
+            696.7318725585938,
+            203.7322998046875
+          ]
+        },
+        {
+          "text": "Display the results index:",
+          "font": "Montserrat-Regular",
+          "size": 7.970099925994873,
+          "flags": 4,
+          "bbox": [
+            528.6420288085938,
+            216.89891052246094,
+            627.431640625,
+            224.8690185546875
+          ]
+        },
+        {
+          "text": "print",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            528.6420288085938,
+            235.4027099609375,
+            551.3568725585938,
+            242.97430419921875
+          ]
+        },
+        {
+          "text": "(displacement_dataframe.columns.results_index)",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            551.3568725585938,
+            235.4027099609375,
+            760.3334350585938,
+            242.97430419921875
+          ]
+        },
+        {
+          "text": "Display the values available in the index:",
+          "font": "Montserrat-Regular",
+          "size": 7.970099925994873,
+          "flags": 4,
+          "bbox": [
+            528.6420288085938,
+            256.14093017578125,
+            688.2039184570312,
+            264.11102294921875
+          ]
+        },
+        {
+          "text": "print",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            528.6420288085938,
+            274.64471435546875,
+            551.3568725585938,
+            282.21630859375
+          ]
+        },
+        {
+          "text": "(displacement_dataframe.columns[0].values)",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            551.3568725585938,
+            274.64471435546875,
+            742.1615600585938,
+            282.21630859375
+          ]
+        },
+        {
+          "text": "Change the number of data rows or columns displayed:",
+          "font": "Montserrat-Regular",
+          "size": 7.970099925994873,
+          "flags": 4,
+          "bbox": [
+            528.6420288085938,
+            295.3829345703125,
+            750.0836791992188,
+            303.35302734375
+          ]
+        },
+        {
+          "text": "displacement_dataframe.display_max_rows = 9",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            528.6420288085938,
+            313.88671875,
+            723.9896850585938,
+            321.45831298828125
+          ]
+        },
+        {
+          "text": "print",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            528.6420288085938,
+            323.3507080078125,
+            551.3568725585938,
+            330.92230224609375
+          ]
+        },
+        {
+          "text": "(displacement_dataframe)",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            551.3568725585938,
+            323.3507080078125,
+            660.3881225585938,
+            330.92230224609375
+          ]
+        },
+        {
+          "text": "Select specific columns or rows, using index names as",
+          "font": "Montserrat-Regular",
+          "size": 7.970099925994873,
+          "flags": 4,
+          "bbox": [
+            528.6420288085938,
+            344.08892822265625,
+            743.213623046875,
+            352.05902099609375
+          ]
+        },
+        {
+          "text": "arguments for the",
+          "font": "Montserrat-Regular",
+          "size": 7.970099925994873,
+          "flags": 4,
+          "bbox": [
+            528.6420288085938,
+            353.5539245605469,
+            601.5126342773438,
+            361.5240173339844
+          ]
+        },
+        {
+          "text": " DataFrame.select",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            601.5126342773438,
+            353.8727111816406,
+            676.2885131835938,
+            361.4443054199219
+          ]
+        },
+        {
+          "text": " method and specified",
+          "font": "Montserrat-Regular",
+          "size": 7.970099925994873,
+          "flags": 4,
+          "bbox": [
+            676.2885131835938,
+            353.5539245605469,
+            766.1031494140625,
+            361.5240173339844
+          ]
+        },
+        {
+          "text": "lists of values:",
+          "font": "Montserrat-Regular",
+          "size": 7.970099925994873,
+          "flags": 4,
+          "bbox": [
+            528.6420288085938,
+            363.0179138183594,
+            582.6396484375,
+            370.9880065917969
+          ]
+        },
+        {
+          "text": "disp_X_1 = displacement_dataframe.select(",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            528.6420288085938,
+            381.5216979980469,
+            714.9037475585938,
+            389.0932922363281
+          ]
+        },
+        {
+          "text": "set_ids=[1], node_ids=[4872, 9005], components=[",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            546.8140258789062,
+            390.9867248535156,
+            764.8765258789062,
+            398.5583190917969
+          ]
+        },
+        {
+          "text": "\"X",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            764.8765258789062,
+            390.9867248535156,
+            773.9624633789062,
+            398.5583190917969
+          ]
+        },
+        {
+          "text": "\"",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            566.739013671875,
+            400.4507141113281,
+            571.281982421875,
+            408.0223083496094
+          ]
+        },
+        {
+          "text": "]",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            571.281982421875,
+            400.4507141113281,
+            575.824951171875,
+            408.0223083496094
+          ]
+        },
+        {
+          "text": ")",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            528.6420288085938,
+            409.9157409667969,
+            533.1849975585938,
+            417.4873352050781
+          ]
+        },
+        {
+          "text": "print",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            528.6420288085938,
+            419.3797302246094,
+            551.3568725585938,
+            426.9513244628906
+          ]
+        },
+        {
+          "text": "(disp_X_1)",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            551.3568725585938,
+            419.3797302246094,
+            596.7865600585938,
+            426.9513244628906
+          ]
+        },
+        {
+          "text": "Extract displacement data as an array contained in a",
+          "font": "Montserrat-Regular",
+          "size": 7.970099925994873,
+          "flags": 4,
+          "bbox": [
+            528.6420288085938,
+            440.1179504394531,
+            737.259521484375,
+            448.0880432128906
+          ]
+        },
+        {
+          "text": "dataframe:",
+          "font": "Montserrat-Regular",
+          "size": 7.970099925994873,
+          "flags": 4,
+          "bbox": [
+            528.6420288085938,
+            449.5819396972656,
+            571.8717651367188,
+            457.5520324707031
+          ]
+        },
+        {
+          "text": "print",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            528.6420288085938,
+            468.0867004394531,
+            551.3568725585938,
+            475.6582946777344
+          ]
+        },
+        {
+          "text": "(disp_X_1.array)",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            551.3568725585938,
+            468.0867004394531,
+            624.0443725585938,
+            475.6582946777344
+          ]
+        },
+        {
+          "text": "# Plot a dataframe",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            528.6420288085938,
+            477.55072021484375,
+            610.4154663085938,
+            485.122314453125
+          ]
+        },
+        {
+          "text": "displacement_dataframe.plot()",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            528.6420288085938,
+            487.0157165527344,
+            660.3881225585938,
+            494.5873107910156
+          ]
+        },
+        {
+          "text": "# Animate a transient dataframe",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            528.6420288085938,
+            496.4797058105469,
+            669.4740600585938,
+            504.0513000488281
+          ]
+        },
+        {
+          "text": "displacement_dataframe.animate()",
+          "font": "SourceCodePro-Regular",
+          "size": 7.571599960327148,
+          "flags": 12,
+          "bbox": [
+            528.6420288085938,
+            505.9447326660156,
+            674.0170288085938,
+            513.516357421875
+          ]
+        },
+        {
+          "text": "References from PyDPF-Post documentation",
+          "font": "Montserrat-Bold",
+          "size": 9.962599754333496,
+          "flags": 20,
+          "bbox": [
+            528.6420288085938,
+            533.1555786132812,
+            763.8787231445312,
+            543.1181640625
+          ]
+        },
+        {
+          "text": "•",
+          "font": "Montserrat-Regular",
+          "size": 7.970099925994873,
+          "flags": 4,
+          "bbox": [
+            546.2160034179688,
+            546.69091796875,
+            548.5671997070312,
+            554.6610107421875
+          ]
+        },
+        {
+          "text": " Getting started",
+          "font": "Montserrat-Regular",
+          "size": 7.970099925994873,
+          "flags": 4,
+          "bbox": [
+            548.5671997070312,
+            546.69091796875,
+            614.4315795898438,
+            554.6610107421875
+          ]
+        },
+        {
+          "text": "•",
+          "font": "Montserrat-Regular",
+          "size": 7.970099925994873,
+          "flags": 4,
+          "bbox": [
+            546.2160034179688,
+            560.140869140625,
+            548.5671997070312,
+            568.1109619140625
+          ]
+        },
+        {
+          "text": " User guide",
+          "font": "Montserrat-Regular",
+          "size": 7.970099925994873,
+          "flags": 4,
+          "bbox": [
+            548.5671997070312,
+            560.140869140625,
+            597.0488891601562,
+            568.1109619140625
+          ]
+        },
+        {
+          "text": "•",
+          "font": "Montserrat-Regular",
+          "size": 7.970099925994873,
+          "flags": 4,
+          "bbox": [
+            669.8909912109375,
+            546.69091796875,
+            672.2421875,
+            554.6610107421875
+          ]
+        },
+        {
+          "text": " Examples",
+          "font": "Montserrat-Regular",
+          "size": 7.970099925994873,
+          "flags": 4,
+          "bbox": [
+            672.2421875,
+            546.69091796875,
+            716.0304565429688,
+            554.6610107421875
+          ]
+        },
+        {
+          "text": "•",
+          "font": "Montserrat-Regular",
+          "size": 7.970099925994873,
+          "flags": 4,
+          "bbox": [
+            669.8909912109375,
+            560.140869140625,
+            672.2421875,
+            568.1109619140625
+          ]
+        },
+        {
+          "text": " API reference",
+          "font": "Montserrat-Regular",
+          "size": 7.970099925994873,
+          "flags": 4,
+          "bbox": [
+            672.2421875,
+            560.140869140625,
+            730.9584350585938,
+            568.1109619140625
+          ]
+        },
+        {
+          "text": "Getting started with PyDPF-Post",
+          "font": "Montserrat-Regular",
+          "size": 7.970099925994873,
+          "flags": 4,
+          "bbox": [
+            221.9499969482422,
+            592.0128784179688,
+            352.8349609375,
+            599.9829711914062
+          ]
+        },
+        {
+          "text": "PyDPF-Post on GitHub",
+          "font": "Montserrat-Regular",
+          "size": 7.970099925994873,
+          "flags": 4,
+          "bbox": [
+            360.9469909667969,
+            592.0128784179688,
+            452.34814453125,
+            599.9829711914062
+          ]
+        },
+        {
+          "text": " Visit",
+          "font": "Montserrat-Regular",
+          "size": 7.970099925994873,
+          "flags": 4,
+          "bbox": [
+            452.34814453125,
+            592.0128784179688,
+            471.2771301269531,
+            599.9829711914062
+          ]
+        },
+        {
+          "text": "post.docs.pyansys.com",
+          "font": "Montserrat-Regular",
+          "size": 7.970099925994873,
+          "flags": 4,
+          "bbox": [
+            479.3900146484375,
+            592.0128784179688,
+            570.050048828125,
+            599.9829711914062
+          ]
+        }
+      ],
+      "sections": [
+        {
+          "type": "section",
+          "title": "Load results file",
+          "start_pos": 72,
+          "end_pos": 89
+        },
+        {
+          "type": "section",
+          "title": "Fetch result metadata",
+          "start_pos": 391,
+          "end_pos": 412
+        },
+        {
+          "type": "section",
+          "title": "Access mesh",
+          "start_pos": 566,
+          "end_pos": 577
+        },
+        {
+          "type": "section",
+          "title": "Access results",
+          "start_pos": 630,
+          "end_pos": 644
+        },
+        {
+          "type": "section",
+          "title": "Create and manipulate a dataframe",
+          "start_pos": 2904,
+          "end_pos": 2937
+        }
+      ]
+    }
+  ],
+  "outline": [],
+  "metadata": {
+    "title": "",
+    "author": "",
+    "subject": "",
+    "creator": "LaTeX with hyperref",
+    "producer": "pdfTeX 1.40.0",
+    "creation_date": "D:20240711204920Z",
+    "modification_date": "D:20240711204920Z"
+  },
+  "chapters": [],
+  "code_examples": [],
+  "api_references": [
+    {
+      "page": 1,
+      "reference": "ansys.dpf.post",
+      "type": "api",
+      "context": "Version: 0.5 (stable) - API is subject to change Load results file Instantiate a simulation object with the path to the results file: On Windows, load the result file: from ansys.dpf import post from ansys.dpf.post import examples sim = post.load_simulation(r'C:\\Users\\user\\file.rst') On Linux, load the result file: sim = post.load_simulation(r'/home/user/file.rst') Fetch result metadata Display metadata from th"
+    },
+    {
+      "page": 1,
+      "reference": "displacement_dataframe.columns.results_index",
+      "type": "api",
+      "context": "t a result as a dataframe displacement_dataframe = simulation.displacement( all_sets=True) Return the dataframe’s column labels: print(displacement_dataframe.columns) Display the results index: print(displacement_dataframe.columns.results_index) Display the values available in the index: print(displacement_dataframe.columns[0].values) Change the number of data rows or columns displayed: displacement_dataframe.display_max_rows = 9 print(disp"
+    },
+    {
+      "page": 1,
+      "reference": "post.docs.pyansys",
+      "type": "api",
+      "context": "ataframe displacement_dataframe.animate() References from PyDPF-Post documentation • Getting started • User guide • Examples • API reference Getting started with PyDPF-Post PyDPF-Post on GitHub Visit post.docs.pyansys.com"
+    }
+  ]
+}

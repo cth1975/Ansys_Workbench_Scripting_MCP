@@ -36,6 +36,120 @@ def get_quick_reference() -> str:
     """Get quick reference guide for common Ansys Workbench scripting tasks."""
     return get_resource_content("quick_reference")
 
+@mcp.resource("ansys://act/development")
+def get_act_development() -> str:
+    """Get ACT (Application Customization Toolkit) development guide."""
+    return get_resource_content("act_development")
+
+@mcp.resource("ansys://dpf/post-processing")
+def get_dpf_post_processing() -> str:
+    """Get DPF post-processing reference and examples."""
+    return get_resource_content("dpf_post_processing")
+
+@mcp.resource("ansys://scripting/examples")
+def get_scripting_examples() -> str:
+    """Get comprehensive scripting examples from all documentation."""
+    return get_resource_content("scripting_examples")
+
+@mcp.resource("ansys://api/reference")
+def get_api_reference() -> str:
+    """Get API reference documentation and method signatures."""
+    return get_resource_content("api_reference")
+
+# Ansys-Specific Tools
+@mcp.tool()
+def search_ansys_docs(query: str, max_results: int = 10) -> str:
+    """
+    Search across all Ansys documentation (PDFs and HTML).
+
+    Args:
+        query: Search query terms
+        max_results: Maximum number of results to return (default: 10)
+    """
+    from ansys_resource_loader import resource_loader
+
+    results = resource_loader.search_content(query, max_results)
+
+    if not results:
+        return f"No results found for query: '{query}'"
+
+    search_output = f"# Search Results for: '{query}'\n\n"
+    search_output += f"Found {len(results)} relevant results:\n\n"
+
+    for i, result in enumerate(results, 1):
+        search_output += f"## Result {i}: {result['source']}\n"
+
+        if result['type'] == 'pdf':
+            search_output += f"**Source**: {result['source']} (Page {result['page']})\n"
+        else:
+            search_output += f"**Source**: {result.get('title', 'Unknown Title')}\n"
+
+        search_output += f"**Type**: {result['type'].upper()}\n"
+        search_output += f"**Relevance**: {result['relevance_score']:.3f}\n\n"
+        search_output += f"**Context**:\n{result['context']}\n\n"
+        search_output += "---\n\n"
+
+    return search_output
+
+@mcp.tool()
+def get_code_example(topic: str) -> str:
+    """
+    Get code examples related to a specific topic.
+
+    Args:
+        topic: Topic or keyword to find code examples for
+    """
+    from ansys_resource_loader import resource_loader
+
+    examples = resource_loader.get_code_examples()
+    relevant_examples = [ex for ex in examples if topic.lower() in ex.get('code', '').lower() or topic.lower() in ex.get('context', '').lower()]
+
+    if not relevant_examples:
+        return f"No code examples found for topic: '{topic}'"
+
+    output = f"# Code Examples for: '{topic}'\n\n"
+
+    for i, example in enumerate(relevant_examples[:5], 1):  # Limit to 5 examples
+        output += f"## Example {i}\n"
+        output += f"**Source**: {example.get('source', 'Unknown')} (Page {example.get('page', 'N/A')})\n"
+        output += f"**Type**: {example.get('type', 'code')}\n\n"
+        output += f"```python\n{example.get('code', '')}\n```\n\n"
+        if example.get('context'):
+            output += f"**Context**: {example['context'][:300]}...\n\n"
+        output += "---\n\n"
+
+    return output
+
+@mcp.tool()
+def get_chapter_content(pdf_name: str, chapter_title: str) -> str:
+    """
+    Get content from a specific chapter in an Ansys PDF manual.
+
+    Args:
+        pdf_name: Name of the PDF (e.g., 'scripting_mechanical_2025r1.pdf')
+        chapter_title: Title or partial title of the chapter
+    """
+    from ansys_resource_loader import resource_loader
+
+    chapter_content = resource_loader.get_pdf_content_by_chapter(pdf_name, chapter_title)
+
+    if not chapter_content:
+        available_chapters = resource_loader.get_pdf_chapters(pdf_name)
+        chapter_list = "\n".join([f"- {ch.get('title', 'Unknown')}" for ch in available_chapters])
+        return f"Chapter '{chapter_title}' not found in {pdf_name}.\n\nAvailable chapters:\n{chapter_list}"
+
+    output = f"# {chapter_content.get('title', 'Unknown Chapter')}\n\n"
+    output += f"**Source**: {pdf_name}\n"
+    output += f"**Pages**: {chapter_content.get('start_page', 'N/A')} - {chapter_content.get('end_page', 'N/A')}\n\n"
+
+    content = chapter_content.get('content', '')
+    if len(content) > 5000:  # Truncate very long content
+        output += content[:5000] + "\n\n*[Content truncated - use search for specific topics]*"
+    else:
+        output += content
+
+    return output
+
 # Ansys-Specific Prompts
 @mcp.prompt()
 def generate_ansys_script(task_description: str, ansys_version: str = "2025 R1", python_type: str = "CPython") -> str:
@@ -181,19 +295,29 @@ if __name__ == "__main__":
     print(f"SSE Endpoint: http://127.0.0.1:8001/sse")
     print("")
     print("🔧 Ansys Workbench Scripting Server Capabilities:")
-    print("  📄 4 Resources:")
+    print("  📄 9 Resources:")
     print("    • ansys://workbench/overview - Workbench automation overview")
     print("    • ansys://pymechanical/architecture - PyMechanical implementation details")
     print("    • ansys://python/cpython-vs-ironpython - Python implementation comparison")
     print("    • ansys://reference/quick-guide - Quick reference for common tasks")
+    print("    • ansys://act/development - ACT development guide")
+    print("    • ansys://dpf/post-processing - DPF post-processing reference")
+    print("    • ansys://scripting/examples - Comprehensive scripting examples")
+    print("    • ansys://api/reference - API reference documentation")
+    print("")
+    print("  🛠️  3 Tools:")
+    print("    • search_ansys_docs - Search across 2000+ pages of documentation")
+    print("    • get_code_example - Find code examples for specific topics")
+    print("    • get_chapter_content - Extract specific chapters from PDF manuals")
     print("")
     print("  🎯 3 Prompts:")
     print("    • generate_ansys_script - Generate automation scripts")
     print("    • debug_ansys_error - Diagnose and resolve scripting errors")
     print("    • convert_ironpython_to_cpython - Migrate legacy scripts")
     print("")
-    print("🎯 Purpose: Augment AI assistants with Ansys Workbench scripting knowledge")
-    print("📚 Documentation: Based on Ansys 2025 R1 and PyMechanical")
+    print("🎯 Purpose: Augment AI assistants with comprehensive Ansys Workbench scripting knowledge")
+    print("📚 Documentation: 40+ MB extracted from 2042 pages across 4 Ansys manuals + HTML docs")
+    print("🔍 Search: Full-text search across all documentation with relevance scoring")
     print("")
     print("Connect MCP Inspector to: http://127.0.0.1:8001/sse")
     print("Press Ctrl+C to stop the server")

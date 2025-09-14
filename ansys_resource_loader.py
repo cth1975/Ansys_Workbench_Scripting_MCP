@@ -8,9 +8,10 @@ Provides structured access to Ansys Workbench scripting resources.
 
 import json
 import os
+import re
 from pathlib import Path
 from datetime import datetime
-from typing import Dict, List, Optional, Any
+from typing import Dict, List, Optional, Any, Tuple
 
 class AnsysResourceLoader:
     """Manages loading and serving Ansys documentation resources."""
@@ -25,6 +26,7 @@ class AnsysResourceLoader:
         # Cache for loaded resources
         self._resource_cache = {}
         self._index_cache = None
+        self._pdf_cache = None
 
     def _load_json_file(self, file_path: Path) -> Optional[Dict]:
         """Load and cache a JSON file."""
@@ -71,6 +73,157 @@ class AnsysResourceLoader:
             self._resource_cache["complete"] = self._load_json_file(complete_file) or {}
         return self._resource_cache["complete"]
 
+    def get_pdf_data(self) -> Dict:
+        """Get extracted PDF content."""
+        if self._pdf_cache is None:
+            pdf_file = self.extracted_dir / "pdf_extracted_content.json"
+            self._pdf_cache = self._load_json_file(pdf_file) or {}
+        return self._pdf_cache
+
+    def search_content(self, query: str, max_results: int = 10) -> List[Dict]:
+        """Search across all documentation content."""
+        results = []
+        query_lower = query.lower()
+
+        # Search PDF content
+        pdf_data = self.get_pdf_data()
+        for pdf_name, pdf_content in pdf_data.get("pdfs", {}).items():
+            if "pages" in pdf_content:
+                for page in pdf_content["pages"]:
+                    text = page.get("clean_text", "")
+                    if query_lower in text.lower():
+                        # Find context around the match
+                        context = self._extract_context(text, query_lower)
+                        results.append({
+                            "source": pdf_name,
+                            "type": "pdf",
+                            "page": page.get("page_number"),
+                            "context": context,
+                            "relevance_score": self._calculate_relevance(text, query_lower)
+                        })
+
+        # Search HTML content
+        html_data = self.get_pymechanical_docs()
+        if "content" in html_data:
+            for item in html_data["content"]:
+                content_text = item.get("content", "")
+                title = item.get("title", "")
+                if query_lower in content_text.lower() or query_lower in title.lower():
+                    context = self._extract_context(content_text, query_lower)
+                    results.append({
+                        "source": "PyMechanical Docs",
+                        "type": "html",
+                        "title": title,
+                        "file": item.get("file"),
+                        "context": context,
+                        "relevance_score": self._calculate_relevance(content_text + " " + title, query_lower)
+                    })
+
+        # Sort by relevance and return top results
+        results.sort(key=lambda x: x["relevance_score"], reverse=True)
+        return results[:max_results]
+
+    def _extract_context(self, text: str, query: str, context_size: int = 300) -> str:
+        """Extract context around a search query match."""
+        match = re.search(re.escape(query), text, re.IGNORECASE)
+        if match:
+            start = max(0, match.start() - context_size // 2)
+            end = min(len(text), match.end() + context_size // 2)
+            context = text[start:end]
+            if start > 0:
+                context = "..." + context
+            if end < len(text):
+                context = context + "..."
+            return context.strip()
+        return text[:context_size] + "..." if len(text) > context_size else text
+
+    def _calculate_relevance(self, text: str, query: str) -> float:
+        """Calculate relevance score for search results."""
+        text_lower = text.lower()
+        query_lower = query.lower()
+
+        # Count exact matches
+        exact_matches = text_lower.count(query_lower)
+
+        # Count word matches
+        query_words = query_lower.split()
+        word_matches = sum(text_lower.count(word) for word in query_words)
+
+        # Calculate score based on frequency and text length
+        score = (exact_matches * 2 + word_matches) / (len(text.split()) + 1)
+        return score
+
+    def get_pdf_chapters(self, pdf_name: str) -> List[Dict]:
+        """Get chapters from a specific PDF."""
+        pdf_data = self.get_pdf_data()
+        pdf_content = pdf_data.get("pdfs", {}).get(pdf_name, {})
+        return pdf_content.get("chapters", [])
+
+    def get_pdf_content_by_chapter(self, pdf_name: str, chapter_title: str) -> Dict:
+        """Get content from a specific chapter in a PDF."""
+        pdf_data = self.get_pdf_data()
+        pdf_content = pdf_data.get("pdfs", {}).get(pdf_name, {})
+
+        chapters = pdf_content.get("chapters", [])
+        for chapter in chapters:
+            if chapter_title.lower() in chapter.get("title", "").lower():
+                # Extract pages for this chapter
+                start_page = chapter.get("start_page", 1)
+                pages = pdf_content.get("pages", [])
+
+                # Find chapter content
+                chapter_pages = [p for p in pages if p.get("page_number", 0) >= start_page]
+
+                # Try to find end page by looking at next chapter
+                next_chapter_page = None
+                current_idx = chapters.index(chapter)
+                if current_idx + 1 < len(chapters):
+                    next_chapter_page = chapters[current_idx + 1].get("start_page")
+
+                if next_chapter_page:
+                    chapter_pages = [p for p in chapter_pages if p.get("page_number", 0) < next_chapter_page]
+
+                # Combine chapter text
+                chapter_text = "\n".join([p.get("clean_text", "") for p in chapter_pages])
+
+                return {
+                    "title": chapter.get("title"),
+                    "start_page": start_page,
+                    "end_page": next_chapter_page - 1 if next_chapter_page else len(pages),
+                    "content": chapter_text,
+                    "sections": chapter.get("sections", [])
+                }
+
+        return {}
+
+    def get_code_examples(self, source: str = "all") -> List[Dict]:
+        """Get code examples from documentation."""
+        examples = []
+
+        if source in ["all", "pdf"]:
+            pdf_data = self.get_pdf_data()
+            for pdf_name, pdf_content in pdf_data.get("pdfs", {}).items():
+                pdf_examples = pdf_content.get("code_examples", [])
+                for example in pdf_examples:
+                    example["source"] = pdf_name
+                    examples.append(example)
+
+        return examples
+
+    def get_api_references(self, source: str = "all") -> List[Dict]:
+        """Get API references from documentation."""
+        references = []
+
+        if source in ["all", "pdf"]:
+            pdf_data = self.get_pdf_data()
+            for pdf_name, pdf_content in pdf_data.get("pdfs", {}).items():
+                pdf_refs = pdf_content.get("api_references", [])
+                for ref in pdf_refs:
+                    ref["source"] = pdf_name
+                    references.append(ref)
+
+        return references
+
 # Global instance
 resource_loader = AnsysResourceLoader()
 
@@ -78,6 +231,7 @@ def get_ansys_workbench_overview() -> str:
     """Get Ansys Workbench overview and capabilities."""
     pymech_docs = resource_loader.get_pymechanical_docs()
     index = resource_loader.get_resource_index()
+    pdf_data = resource_loader.get_pdf_data()
 
     overview_content = f"""# Ansys Workbench Scripting Overview
 
@@ -115,12 +269,10 @@ Ansys Workbench provides powerful automation capabilities through Python scripti
 - **Threading Support**: Multi-threaded operation capabilities
 - **Data Model Access**: Full access to Mechanical's object hierarchy
 
-## Resource Overview
-
-### Available Documentation
+## Comprehensive Documentation Available
 """
 
-    # Add resource statistics
+    # Add resource statistics from both sources
     if index.get("statistics"):
         stats = index["statistics"]
         overview_content += f"""
@@ -130,15 +282,35 @@ Ansys Workbench provides powerful automation capabilities through Python scripti
 - **Last Updated**: {index.get('created', 'Unknown')[:10]}
 """
 
+    # Add PDF extraction statistics
+    if pdf_data.get("files_processed"):
+        overview_content += f"""
+
+**Extracted PDF Content:**
+- **Total Pages Processed**: {pdf_data.get('total_pages', 0):,} pages
+- **Documents**: {pdf_data.get('files_processed', 0)} manuals fully extracted
+- **Content Size**: 40+ MB of structured text and metadata
+"""
+
+    # Add available PDFs with chapter counts
+    if pdf_data.get("pdfs"):
+        overview_content += "\n**Available Manuals:**\n"
+        for pdf_name, pdf_content in pdf_data["pdfs"].items():
+            chapters = len(pdf_content.get("chapters", []))
+            pages = pdf_content.get("total_pages", 0)
+            overview_content += f"- **{pdf_name.replace('_', ' ').replace('.pdf', '')}**: {pages} pages, {chapters} chapters\n"
+
     # Add content from PyMechanical docs
     if pymech_docs.get("content"):
         overview_content += f"""
-**PyMechanical Documentation Status:**
-- **HTML Files Processed**: {pymech_docs.get('processed_files', 0)} / {pymech_docs.get('total_files', 0)}
+
+**PyMechanical HTML Documentation:**
+- **Files Processed**: {pymech_docs.get('processed_files', 0)} / {pymech_docs.get('total_files', 0)}
 - **Processing Date**: {pymech_docs.get('processed_date', 'Unknown')[:10]}
 """
 
     overview_content += """
+
 ## Getting Started
 
 ### Basic PyMechanical Usage
@@ -170,15 +342,24 @@ result = mechanical.run_python_script("model.Name")
 print(f"Remote model name: {result}")
 ```
 
+## Available Resources
+
+1. **Workbench Overview** - This comprehensive guide
+2. **PyMechanical Architecture** - Implementation details and design patterns
+3. **CPython vs IronPython** - Migration guide and comparison
+4. **Quick Reference** - Common scripting tasks and examples
+5. **Search Capability** - Query across all 2000+ pages of documentation
+
 ## Next Steps
 
 1. **Explore Resources**: Use MCP resources to access detailed documentation
-2. **API Reference**: Check Mechanical API stubs for exact method signatures
-3. **Examples**: Review code examples from PyMechanical documentation
-4. **Best Practices**: Follow Ansys recommendations for automation workflows
+2. **Search Documentation**: Use search tools to find specific topics
+3. **API Reference**: Check Mechanical API stubs for exact method signatures
+4. **Examples**: Review code examples from comprehensive manuals
+5. **Best Practices**: Follow Ansys recommendations for automation workflows
 
 ---
-*This overview is generated from the latest Ansys documentation (2025 R1)*
+*This overview is generated from 40+ MB of extracted Ansys documentation (2025 R1)*
 """
 
     return overview_content
@@ -186,6 +367,7 @@ print(f"Remote model name: {result}")
 def get_pymechanical_architecture() -> str:
     """Get detailed PyMechanical architecture information."""
     pymech_docs = resource_loader.get_pymechanical_docs()
+    pdf_data = resource_loader.get_pdf_data()
 
     # Extract architecture content from processed docs
     architecture_content = """# PyMechanical Architecture
@@ -274,7 +456,28 @@ app.save("my_analysis.mechdb")
 
 """
 
-    # Add any specific content from processed docs if available
+    # Add content from scripting manual
+    scripting_pdf = "scripting_mechanical_2025r1.pdf"
+    if scripting_pdf in pdf_data.get("pdfs", {}):
+        # Look for architecture-related chapters
+        chapters = resource_loader.get_pdf_chapters(scripting_pdf)
+        for chapter in chapters:
+            if any(keyword in chapter.get("title", "").lower() for keyword in ["architecture", "overview", "introduction"]):
+                chapter_content = resource_loader.get_pdf_content_by_chapter(scripting_pdf, chapter["title"])
+                if chapter_content.get("content"):
+                    # Extract first 1000 characters for overview
+                    content_snippet = chapter_content["content"][:1500]
+                    architecture_content += f"""
+
+## From Ansys Scripting Guide: {chapter.get('title')}
+
+{content_snippet}...
+
+*[Extracted from {scripting_pdf}, Chapter {chapter.get('title')}]*
+"""
+                break
+
+    # Add content from HTML docs if available
     if pymech_docs.get("content"):
         for item in pymech_docs["content"]:
             if "architecture" in item.get("title", "").lower():
@@ -282,11 +485,12 @@ app.save("my_analysis.mechdb")
                 content_snippet = item.get("content", "")[:1000]
                 if content_snippet:
                     architecture_content += f"""
-## Additional Architecture Details
+
+## From PyMechanical Documentation
 
 {content_snippet}...
 
-*[Content extracted from PyMechanical documentation]*
+*[Content extracted from PyMechanical HTML documentation]*
 """
                 break
 
@@ -702,6 +906,199 @@ logging.info(f"Mesh generated: {mesh.Elements} elements")
 *Quick reference for Ansys Workbench automation with PyMechanical*
 """
 
+def get_act_development_guide() -> str:
+    """Get ACT development guide from extracted PDF content."""
+    pdf_data = resource_loader.get_pdf_data()
+    act_pdf = "act_developers_guide_2025r1.pdf"
+
+    guide_content = """# ACT (Application Customization Toolkit) Development Guide
+
+## Overview
+
+ACT enables developers to create custom applications and extensions for Ansys Mechanical. This guide covers the development process, APIs, and best practices for ACT development.
+
+## Key Components
+
+### 1. **ACT Framework**
+- Extensibility framework for Mechanical
+- Python-based development environment
+- Integration with Mechanical's data model
+
+### 2. **Development Environment**
+- ACT Console for testing and debugging
+- Extensions Manager for deployment
+- Template system for rapid development
+
+"""
+
+    if act_pdf in pdf_data.get("pdfs", {}):
+        # Get first chapter content as overview
+        chapters = resource_loader.get_pdf_chapters(act_pdf)
+        if chapters:
+            first_chapter = chapters[0]
+            chapter_content = resource_loader.get_pdf_content_by_chapter(act_pdf, first_chapter["title"])
+            if chapter_content.get("content"):
+                guide_content += f"""
+## From ACT Developer's Guide: {first_chapter.get('title')}
+
+{chapter_content['content'][:2000]}...
+
+*[Content from {act_pdf}]*
+"""
+
+        pdf_content = pdf_data["pdfs"][act_pdf]
+        guide_content += f"""
+
+## Available Chapters ({len(chapters)} total)
+
+This {pdf_content.get('total_pages', 0)}-page guide covers:
+"""
+        for chapter in chapters[:10]:  # Show first 10 chapters
+            guide_content += f"- {chapter.get('title', 'Unknown')}\n"
+
+    guide_content += """
+
+## Getting Started with ACT Development
+
+1. **Setup Development Environment**
+2. **Understand ACT Architecture**
+3. **Create Your First Extension**
+4. **Test and Debug**
+5. **Deploy and Distribute**
+
+Use the `get_chapter_content` tool to access specific chapters from the ACT Developer's Guide.
+"""
+
+    return guide_content
+
+def get_dpf_post_processing_guide() -> str:
+    """Get DPF post-processing guide."""
+    pdf_data = resource_loader.get_pdf_data()
+    dpf_pdf = "dpf_post_cheat_sheet.pdf"
+
+    if dpf_pdf in pdf_data.get("pdfs", {}):
+        pdf_content = pdf_data["pdfs"][dpf_pdf]
+        if "pages" in pdf_content and pdf_content["pages"]:
+            page_content = pdf_content["pages"][0]  # It's a 1-page cheat sheet
+            return f"""# PyDPF-Post Processing Cheat Sheet
+
+## Overview
+
+PyDPF-Post provides a Pythonic interface for post-processing Ansys results. This cheat sheet covers the most common operations.
+
+{page_content.get('clean_text', '')}
+
+---
+*Content extracted from {dpf_pdf}*
+"""
+
+    return """# PyDPF-Post Processing Guide
+
+PyDPF-Post provides powerful post-processing capabilities for Ansys results.
+
+## Key Features
+- Pythonic interface to Ansys results
+- Efficient data manipulation
+- Visualization capabilities
+- Integration with scientific Python ecosystem
+
+*Use the search tool to find specific DPF topics in the documentation.*
+"""
+
+def get_scripting_examples_guide() -> str:
+    """Get comprehensive scripting examples from all documentation."""
+    examples = resource_loader.get_code_examples()
+
+    guide_content = f"""# Ansys Scripting Examples
+
+## Overview
+
+This collection contains {len(examples)} code examples extracted from official Ansys documentation.
+
+## Available Examples
+"""
+
+    # Group examples by source
+    examples_by_source = {}
+    for example in examples:
+        source = example.get('source', 'Unknown')
+        if source not in examples_by_source:
+            examples_by_source[source] = []
+        examples_by_source[source].append(example)
+
+    for source, source_examples in examples_by_source.items():
+        guide_content += f"\n### {source.replace('_', ' ').replace('.pdf', '')}\n"
+        guide_content += f"- {len(source_examples)} examples available\n"
+
+    if examples:
+        guide_content += "\n## Sample Examples\n\n"
+        for i, example in enumerate(examples[:3], 1):  # Show first 3 examples
+            guide_content += f"### Example {i}: {example.get('type', 'Code')}\n"
+            guide_content += f"**Source**: {example.get('source', 'Unknown')} (Page {example.get('page', 'N/A')})\n\n"
+            code = example.get('code', '')[:500]  # Truncate long code
+            guide_content += f"```python\n{code}\n```\n\n"
+
+    guide_content += """
+## Finding Examples
+
+Use the `get_code_example` tool with specific topics:
+- `get_code_example("mesh generation")`
+- `get_code_example("analysis setup")`
+- `get_code_example("results extraction")`
+"""
+
+    return guide_content
+
+def get_api_reference_guide() -> str:
+    """Get API reference documentation."""
+    api_refs = resource_loader.get_api_references()
+
+    guide_content = f"""# Ansys API Reference
+
+## Overview
+
+This reference contains {len(api_refs)} API references extracted from official documentation.
+
+## API Categories
+
+### PyMechanical Core API
+- App class and initialization
+- Mechanical remote sessions
+- Data model access
+
+### Mechanical Scripting API
+- Analysis setup and execution
+- Geometry and meshing operations
+- Results and post-processing
+
+### ACT API
+- Extension development
+- Custom UI components
+- Solver integration
+"""
+
+    # Show sample API references
+    if api_refs:
+        guide_content += "\n## Sample API References\n\n"
+        for i, ref in enumerate(api_refs[:5], 1):  # Show first 5 references
+            guide_content += f"### {i}. {ref.get('reference', 'Unknown')}\n"
+            guide_content += f"**Source**: {ref.get('source', 'Unknown')} (Page {ref.get('page', 'N/A')})\n"
+            if ref.get('context'):
+                guide_content += f"**Context**: {ref['context'][:200]}...\n\n"
+
+    guide_content += """
+## Using the API
+
+For detailed API usage:
+1. Use the search tool to find specific methods
+2. Check the PyMechanical architecture resource
+3. Review scripting examples for usage patterns
+
+*Search for specific API methods like "App()", "launch_mechanical", etc.*
+"""
+
+    return guide_content
+
 # Main resource functions that will be used by the MCP server
 def get_resource_content(resource_name: str) -> str:
     """Get content for a specific resource."""
@@ -709,7 +1106,11 @@ def get_resource_content(resource_name: str) -> str:
         "workbench_overview": get_ansys_workbench_overview,
         "pymechanical_architecture": get_pymechanical_architecture,
         "cpython_vs_ironpython": get_cpython_vs_ironpython_guide,
-        "quick_reference": get_quick_reference_guide
+        "quick_reference": get_quick_reference_guide,
+        "act_development": get_act_development_guide,
+        "dpf_post_processing": get_dpf_post_processing_guide,
+        "scripting_examples": get_scripting_examples_guide,
+        "api_reference": get_api_reference_guide
     }
 
     if resource_name in resource_map:
