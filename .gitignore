@@ -24,5 +24,21 @@ __pycache__/
 .DS_Store
 Thumbs.db
 
+# Sensitive information (keys, tokens, credentials)
+.env
+.env.*
+config.json
+secrets.json
+*.key
+*.pem
+.secrets/
+
+# Local configuration
+local_config.py
+local_settings.py
+
 # MCP specific
 mcp_debug*.log
+
+# GitHub CLI temporary files
+.gh-token

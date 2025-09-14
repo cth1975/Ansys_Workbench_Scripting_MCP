@@ -166,6 +166,7 @@ All dependencies are installed in virtual environment:
 
 ## Development Commands
 
+### Quick Start
 ```bash
 # Complete solution (recommended)
 python launcher_http.py
@@ -175,13 +176,85 @@ python server_http.py
 
 # Check server status
 curl http://127.0.0.1:8001/
+```
+
+### Development Setup
+```bash
+# Clone repository (if from GitHub)
+git clone <repository-url>
+cd Ansys_Workbench_Scripting_MCP
+
+# Set up virtual environment
+python -m venv .venv
+source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 
 # Install dependencies
 pip install -r requirements.txt
 
-# Virtual environment
-source .venv/bin/activate
+# Install development dependencies
+pip install -r requirements-dev.txt
 ```
+
+### GitHub CLI Commands
+```bash
+# Check authentication
+gh auth status
+
+# Create repository on GitHub
+gh repo create Ansys_Workbench_Scripting_MCP --public --description "MCP Server for TechCorp Solutions with HTTP/SSE transport"
+
+# Push to GitHub
+git push -u origin main
+
+# View repository
+gh repo view --web
+
+# Create issues
+gh issue create --title "Feature request" --body "Description"
+
+# Create pull requests (for collaboration)
+gh pr create --title "Feature" --body "Description"
+```
+
+### Git Workflow
+```bash
+# Check status
+git status
+
+# Stage and commit changes
+git add .
+git commit -m "Description of changes"
+
+# Push to GitHub
+git push
+
+# Pull latest changes (multi-machine setup)
+git pull
+```
+
+## Multi-Machine Development
+
+This repository includes everything needed for seamless development across multiple machines:
+
+### ✅ Included Files for Development:
+- **CLAUDE.md**: Complete project documentation and setup instructions
+- **DEBUGGING_FINDINGS.md**: Research findings and technical details
+- **requirements.txt & requirements-dev.txt**: All dependencies documented
+- **.gitignore**: Proper exclusions configured
+- **Working code**: Only production-ready files included
+
+### 🔧 Setting Up on New Machine:
+1. **Clone repository**: `git clone <repo-url>`
+2. **Set up virtual environment**: `python -m venv .venv && source .venv/bin/activate`
+3. **Install dependencies**: `pip install -r requirements.txt`
+4. **Run solution**: `python launcher_http.py`
+5. **Development ready**: All configuration and documentation included
+
+### 📋 Development Workflow:
+- **Make changes**: Edit code as needed
+- **Test locally**: `python launcher_http.py`
+- **Commit & push**: `git add . && git commit -m "Description" && git push`
+- **Pull on other machines**: `git pull` to sync changes
 
 ## Project Evolution
 
