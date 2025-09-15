@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "ansys-workbench": {
+      "command": "/opt/anaconda3/bin/python",
+      "args": ["/Users/christopherhoughton/Dropbox/Code/Ansys_Workbench_Scripting_MCP/server_stdio.py"],
+      "env": {
+        "PYTHONPATH": "/Users/christopherhoughton/Dropbox/Code/Ansys_Workbench_Scripting_MCP"
+      }
+    }
+  }
+}

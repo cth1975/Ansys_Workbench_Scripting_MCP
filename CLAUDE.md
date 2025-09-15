@@ -115,8 +115,15 @@ The MCP server now includes:
 ```
 Ansys_Workbench_Scripting_MCP/
 ├── server_http.py                    # ✅ Enhanced HTTP/SSE MCP Server (9 resources, 3 tools)
+├── server_stdio.py                   # ✅ Enhanced STDIO MCP Server (same capabilities)
+├── server_stdio_lowlevel.py          # ✅ Low-level STDIO implementation
 ├── launcher_http.py                  # ✅ Updated auto-configuring launcher
+├── launcher_stdio.py                 # ✅ STDIO launcher with MCP Inspector
 ├── ansys_resource_loader.py          # ✅ Dynamic content loader with search
+├── claude_desktop_config.json        # ✅ Ready-to-use Claude Desktop configuration
+├── test_stdio_server.py              # ✅ STDIO server verification script
+├── CLAUDE_DESKTOP_SETUP.md           # ✅ Step-by-step Claude Desktop setup guide
+├── README_STDIO.md                   # ✅ STDIO transport documentation and solutions
 ├── scripts/
 │   ├── download_resources.py         # ✅ Resource downloader for Ansys docs
 │   ├── process_resources.py          # ✅ HTML content processor
@@ -137,7 +144,31 @@ Ansys_Workbench_Scripting_MCP/
 
 ## How to Use
 
-### Quick Start (Enhanced)
+### 🚀 Quick Start: Claude Desktop (RECOMMENDED)
+
+**Direct connection to Claude Desktop via STDIO transport - bypasses MCP Inspector validation bug**
+
+```bash
+# 1. Test the STDIO server
+python test_stdio_server.py
+
+# 2. Copy configuration to Claude Desktop
+# macOS: ~/Library/Application Support/Claude/claude_desktop_config.json
+# Windows: C:\Users\{username}\AppData\Roaming\Claude\claude_desktop_config.json
+cp claude_desktop_config.json ~/Library/Application\ Support/Claude/claude_desktop_config.json
+
+# 3. Restart Claude Desktop and look for MCP tools icon (🔧)
+```
+
+**Benefits:**
+- ✅ **No MCP Inspector bug** - Works directly with Claude Desktop
+- ✅ **Production STDIO transport** - Same 40MB+ documentation corpus
+- ✅ **All 9 resources, 3 tools, 3 prompts** - Complete functionality
+- ✅ **Ready-to-use config** - Just copy and restart Claude Desktop
+
+See `CLAUDE_DESKTOP_SETUP.md` for detailed step-by-step instructions.
+
+### 🌐 Alternative: HTTP/SSE (Enhanced)
 ```bash
 # Run the complete enhanced solution
 python launcher_http.py
@@ -150,13 +181,27 @@ This will:
 4. ✅ Display comprehensive capability overview
 5. ✅ Provide access to 9 resources, 3 tools, and 3 enhanced prompts
 
-### Testing Enhanced Capabilities
+### 🔧 Testing and Development
+
+#### Test STDIO Server
+```bash
+# Comprehensive STDIO server testing
+python test_stdio_server.py
+```
+
+#### Test Enhanced Capabilities
 ```bash
 # Test all enhanced features
 python test_enhanced_server.py
 ```
 
-### Manual Server Only
+#### Manual STDIO Server
+```bash
+# Run STDIO server directly (for Claude Desktop)
+python server_stdio.py
+```
+
+#### Manual HTTP Server
 ```bash
 # Run just the enhanced HTTP server
 python server_http.py
@@ -318,6 +363,13 @@ python launcher_http.py
 4. **Tool development** → Search, examples, and chapter access tools
 5. **Complete integration** → All content accessible through MCP interface
 
+### Phase 4: STDIO Transport Solution ✅ COMPLETE
+1. **STDIO implementation** → Created server_stdio.py with same capabilities
+2. **MCP Inspector bug analysis** → Identified SDK validation issue (-32602 error)
+3. **Claude Desktop integration** → Direct STDIO connection bypassing Inspector bug
+4. **Production solution** → Working STDIO transport for actual model usage
+5. **Complete documentation** → Setup guides and testing scripts
+
 ## Repository Information
 
 - **GitHub**: [https://github.com/cth1975/Ansys_Workbench_Scripting_MCP](https://github.com/cth1975/Ansys_Workbench_Scripting_MCP)
@@ -336,11 +388,14 @@ python launcher_http.py
 - ✅ **API references**: 1,542 methods indexed and searchable
 
 ### Infrastructure Testing
-- ✅ **Server starts successfully** on port 8001 with enhanced content
-- ✅ **MCP Inspector connects** without errors to enhanced server
+- ✅ **HTTP server starts successfully** on port 8001 with enhanced content
+- ✅ **STDIO server starts successfully** with same enhanced content
+- ✅ **MCP Inspector connects** without errors to HTTP/SSE server
+- ✅ **Claude Desktop connects** successfully to STDIO server
 - ✅ **Auto-configuration works** perfectly with updated capabilities
 - ✅ **No "Method not found" errors** with HTTP/SSE transport
-- ✅ **Enhanced launcher** displays comprehensive capability overview
+- ✅ **STDIO transport works** with production Claude Desktop connection
+- ✅ **Enhanced launchers** display comprehensive capability overview
 
 ## Future Enhancements
 
